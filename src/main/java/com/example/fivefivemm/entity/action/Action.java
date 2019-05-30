@@ -146,6 +146,14 @@ public class Action {
         this.collect = collect;
     }
 
+    public Set<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<Message> messages) {
+        this.messages = messages;
+    }
+
     @Override
     public String toString() {
         return "[Action:actionId:" + actionId + ",title:" + title + ",createTime:" + createTime + ",address:" + address + ",cost:" + cost + ",content:" + content + ",authorId:" + author.getUserId() +

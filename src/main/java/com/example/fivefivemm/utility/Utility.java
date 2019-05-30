@@ -76,6 +76,21 @@ public class Utility {
     }
 
     /**
+     * 生成6位数验证码
+     *
+     * @return 验证码
+     */
+    public static String VerificationCode() {
+        String val = "";
+        Random random = new Random();
+        //length为几位验证码
+        for (int i = 0; i < 6; i++) {
+            val += String.valueOf(random.nextInt(10));
+        }
+        return val;
+    }
+
+    /**
      * 业务Json构造
      */
     public static String ResultBody(int status, String message, Object data) {
@@ -93,7 +108,7 @@ public class Utility {
     /**
      * 单个动态信息Json构造
      */
-    public static Map ActionBody(Action action) {
+    public static Map<String, Object> ActionBody(Action action) {
         Map<String, Object> actionMap = new HashMap<>();
         Map<String, Object> authorMap = new HashMap<>();
         JSONArray imageArray = new JSONArray();
@@ -109,7 +124,7 @@ public class Utility {
         }
         //获取内容中的图片
         String images[] = getImageAddress(action.getContent());
-        if (images.length != 0) {
+        if (getImageAddress(action.getContent()).length != 0) {
             for (String img : images) {
                 imageArray.add(Constants.imageAddress + img);
             }
@@ -142,7 +157,7 @@ public class Utility {
     /**
      * 单个用户信息Json构造(完整 type=1 部分 type=2)
      */
-    public static Map userBody(User user, Integer type) {
+    public static Map<String, Object> userBody(User user, Integer type) {
         Map<String, Object> userMap = new HashMap<>();
         //基础信息
         userMap.put("userId", user.getUserId());
@@ -165,6 +180,24 @@ public class Utility {
         }
 
         return userMap;
+    }
+
+    /**
+     * 多个用户信息构造
+     *
+     * @param userList 用户列表
+     * @return JSONArray
+     */
+    public static JSONArray userListBody(List<User> userList) {
+        if (userList != null && userList.size() > 0) {
+            JSONArray actionArray = new JSONArray();
+            for (User user : userList) {
+                actionArray.add(userBody(user, 2));
+            }
+            return actionArray;
+        } else {
+            return new JSONArray();
+        }
     }
 
     /**
@@ -286,85 +319,127 @@ public class Utility {
         return res;
     }
 
-    /**
-     * 消息接受者Json构造
-     *
-     * @param message 消息对象
-     * @return Map集合
-     */
-    public static Map MessageBodyForAuthor(Message message) {
-        Map<String, Object> messageMap = new HashMap<>();
-        Map<String, Object> watcherMap = new HashMap<>();
-        Map<String, Object> actionMap = new HashMap<>();
-//        Map<String, Object> actionAuthorMap = new HashMap<>();
-
-        messageMap.put("messageId", message.getMessageId());
-        messageMap.put("time", message.getCreateTime().toString());
-        messageMap.put("isRead", message.isRead());
-        messageMap.put("isAccept", message.isAccept());
-
-        watcherMap.put("userId", message.getUser().getUserId());
-        watcherMap.put("name", message.getUser().getName());
-        watcherMap.put("avatar", message.getUser().getAvatar());
-        watcherMap.put("sex", message.getUser().getSex());
-        watcherMap.put("type", message.getUser().getType());
-
-        actionMap.put("actionId", message.getAction().getActionId());
-        actionMap.put("title", message.getAction().getTitle());
-//        actionMap.put("cost", message.getAction().getCost());
-//        actionMap.put("address", message.getAction().getAddress());
-//        actionMap.put("time", message.getAction().getCreateTime().toString());
-
-//        actionAuthorMap.put("userId", message.getAction().getAuthor().getUserId());
-//        actionAuthorMap.put("name", message.getAction().getAuthor().getName());
-//        actionAuthorMap.put("avatar", message.getAction().getAuthor().getAvatar());
-//        actionAuthorMap.put("sex", message.getAction().getAuthor().getSex());
-//        actionAuthorMap.put("type", message.getAction().getAuthor().getType());
-
-//        actionMap.put("author", actionAuthorMap);
-        messageMap.put("watcher", watcherMap);
-        messageMap.put("action", actionMap);
-        return messageMap;
-    }
-
-    /**
-     * 消息发起者Json构造
-     *
-     * @param message 消息对象
-     * @return Map集合
-     */
-    public static Map MessageBodyForWatcher(Message message) {
-        Map<String, Object> messageMap = new HashMap<>();
+//    /**
+//     * 消息接受者Json构造
+//     *
+//     * @param message 消息对象
+//     * @return Map集合
+//     */
+//    public static Map<String, Object> MessageBodyForAuthor(Message message) {
+//        Map<String, Object> messageMap = new HashMap<>();
 //        Map<String, Object> watcherMap = new HashMap<>();
-        Map<String, Object> actionMap = new HashMap<>();
-        Map<String, Object> actionAuthorMap = new HashMap<>();
-
-        messageMap.put("messageId", message.getMessageId());
-        messageMap.put("time", message.getCreateTime().toString());
-        messageMap.put("isRead", message.isRead());
-        messageMap.put("isAccept", message.isAccept());
-
+//        Map<String, Object> actionMap = new HashMap<>();
+////        Map<String, Object> actionAuthorMap = new HashMap<>();
+//
+//        messageMap.put("messageId", message.getMessageId());
+//        messageMap.put("time", message.getCreateTime().toString());
+//        messageMap.put("isRead", message.isRead());
+//        messageMap.put("isAccept", message.isAccept());
+//
 //        watcherMap.put("userId", message.getUser().getUserId());
 //        watcherMap.put("name", message.getUser().getName());
 //        watcherMap.put("avatar", message.getUser().getAvatar());
 //        watcherMap.put("sex", message.getUser().getSex());
 //        watcherMap.put("type", message.getUser().getType());
+//
+//        actionMap.put("actionId", message.getAction().getActionId());
+//        actionMap.put("title", message.getAction().getTitle());
+////        actionMap.put("cost", message.getAction().getCost());
+////        actionMap.put("address", message.getAction().getAddress());
+////        actionMap.put("time", message.getAction().getCreateTime().toString());
+//
+////        actionAuthorMap.put("userId", message.getAction().getAuthor().getUserId());
+////        actionAuthorMap.put("name", message.getAction().getAuthor().getName());
+////        actionAuthorMap.put("avatar", message.getAction().getAuthor().getAvatar());
+////        actionAuthorMap.put("sex", message.getAction().getAuthor().getSex());
+////        actionAuthorMap.put("type", message.getAction().getAuthor().getType());
+//
+////        actionMap.put("author", actionAuthorMap);
+//        messageMap.put("watcher", watcherMap);
+//        messageMap.put("action", actionMap);
+//        return messageMap;
+//    }
+
+//    /**
+//     * 消息发起者Json构造
+//     *
+//     * @param message 消息对象
+//     * @return Map集合
+//     */
+//    public static Map<String, Object> MessageBodyForWatcher(Message message) {
+//        Map<String, Object> messageMap = new HashMap<>();
+////        Map<String, Object> watcherMap = new HashMap<>();
+//        Map<String, Object> actionMap = new HashMap<>();
+//        Map<String, Object> actionAuthorMap = new HashMap<>();
+//
+//        messageMap.put("messageId", message.getMessageId());
+//        messageMap.put("time", message.getCreateTime().toString());
+//        messageMap.put("isRead", message.isRead());
+//        messageMap.put("isAccept", message.isAccept());
+//
+////        watcherMap.put("userId", message.getUser().getUserId());
+////        watcherMap.put("name", message.getUser().getName());
+////        watcherMap.put("avatar", message.getUser().getAvatar());
+////        watcherMap.put("sex", message.getUser().getSex());
+////        watcherMap.put("type", message.getUser().getType());
+//
+//        actionMap.put("actionId", message.getAction().getActionId());
+//        actionMap.put("title", message.getAction().getTitle());
+////        actionMap.put("cost", message.getAction().getCost());
+////        actionMap.put("address", message.getAction().getAddress());
+////        actionMap.put("time", message.getAction().getCreateTime().toString());
+//
+//        actionAuthorMap.put("userId", message.getAction().getAuthor().getUserId());
+//        actionAuthorMap.put("name", message.getAction().getAuthor().getName());
+//        actionAuthorMap.put("avatar", message.getAction().getAuthor().getAvatar());
+//        actionAuthorMap.put("sex", message.getAction().getAuthor().getSex());
+//        actionAuthorMap.put("type", message.getAction().getAuthor().getType());
+//
+//        actionMap.put("author", actionAuthorMap);
+////        messageMap.put("watcher", watcherMap);
+//        messageMap.put("action", actionMap);
+//        return messageMap;
+//    }
+
+    /**
+     * 消息Json构造
+     *
+     * @param message 消息
+     * @param type    1:消息接收者 2.消息发起者
+     * @return Map
+     */
+    public static Map<String, Object> MessageBody(Message message, Integer type) {
+        Map<String, Object> messageMap = new HashMap<>();
+        Map<String, Object> actionMap = new HashMap<>();
+
+        messageMap.put("messageId", message.getMessageId());
+        messageMap.put("time", message.getCreateTime().toString());
+        messageMap.put("isRead", message.isRead());
+        messageMap.put("isAccept", message.isAccept());
 
         actionMap.put("actionId", message.getAction().getActionId());
         actionMap.put("title", message.getAction().getTitle());
-//        actionMap.put("cost", message.getAction().getCost());
-//        actionMap.put("address", message.getAction().getAddress());
-//        actionMap.put("time", message.getAction().getCreateTime().toString());
 
-        actionAuthorMap.put("userId", message.getAction().getAuthor().getUserId());
-        actionAuthorMap.put("name", message.getAction().getAuthor().getName());
-        actionAuthorMap.put("avatar", message.getAction().getAuthor().getAvatar());
-        actionAuthorMap.put("sex", message.getAction().getAuthor().getSex());
-        actionAuthorMap.put("type", message.getAction().getAuthor().getType());
+        if (type == 1) {
+            Map<String, Object> watcherMap = new HashMap<>();
+            watcherMap.put("userId", message.getUser().getUserId());
+            watcherMap.put("name", message.getUser().getName());
+            watcherMap.put("avatar", message.getUser().getAvatar());
+            watcherMap.put("sex", message.getUser().getSex());
+            watcherMap.put("type", message.getUser().getType());
+            messageMap.put("watcher", watcherMap);
+        } else {
+            Map<String, Object> actionAuthorMap = new HashMap<>();
+            actionAuthorMap.put("userId", message.getAction().getAuthor().getUserId());
+            actionAuthorMap.put("name", message.getAction().getAuthor().getName());
+            actionAuthorMap.put("avatar", message.getAction().getAuthor().getAvatar());
+            actionAuthorMap.put("sex", message.getAction().getAuthor().getSex());
+            actionAuthorMap.put("type", message.getAction().getAuthor().getType());
+            actionMap.put("author", actionAuthorMap);
+        }
 
-        actionMap.put("author", actionAuthorMap);
-//        messageMap.put("watcher", watcherMap);
         messageMap.put("action", actionMap);
+
         return messageMap;
     }
 
@@ -375,11 +450,12 @@ public class Utility {
         if (messageList != null && messageList.size() > 0) {
             JSONArray messageArray = new JSONArray();
             for (Message message : messageList) {
-                if (type == 1) {
-                    messageArray.add(MessageBodyForAuthor(message));
-                } else {
-                    messageArray.add(MessageBodyForWatcher(message));
-                }
+//                if (type == 1) {
+//                    messageArray.add(MessageBodyForAuthor(message));
+//                } else {
+//                    messageArray.add(MessageBodyForWatcher(message));
+//                }
+                messageArray.add(MessageBody(message, type));
             }
             return messageArray;
         } else {

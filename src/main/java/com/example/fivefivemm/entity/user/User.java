@@ -1,6 +1,8 @@
 package com.example.fivefivemm.entity.user;
 
 import com.example.fivefivemm.entity.action.Action;
+import com.example.fivefivemm.entity.relation.ActionCollection;
+import com.example.fivefivemm.entity.relation.UserCollection;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -60,6 +62,15 @@ public class User {
     //LAZY懒加载,在加载该属性时加上事务注解，已存在的属性不用加载
     @OneToMany(fetch = FetchType.LAZY, targetEntity = Action.class, mappedBy = "author")
     private Set<Action> myActions;
+
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ActionCollection.class, mappedBy = "collector")
+    private Set<ActionCollection> actionCollections;
+
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = UserCollection.class, mappedBy = "focus")
+    private Set<UserCollection> fans;
+
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = UserCollection.class, mappedBy = "fans")
+    private Set<UserCollection> focus;
 
     public User() {
 
@@ -219,6 +230,30 @@ public class User {
 
     public void setMyActions(Set<Action> myActions) {
         this.myActions = myActions;
+    }
+
+    public Set<ActionCollection> getActionCollections() {
+        return actionCollections;
+    }
+
+    public void setActionCollections(Set<ActionCollection> actionCollections) {
+        this.actionCollections = actionCollections;
+    }
+
+    public Set<UserCollection> getFans() {
+        return fans;
+    }
+
+    public void setFans(Set<UserCollection> fans) {
+        this.fans = fans;
+    }
+
+    public Set<UserCollection> getFocus() {
+        return focus;
+    }
+
+    public void setFocus(Set<UserCollection> focus) {
+        this.focus = focus;
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.example.fivefivemm.entity.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * 动态收藏表,保存用户与动态之间的收藏关系
@@ -20,6 +21,9 @@ public class ActionCollection implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer actionCollectionId;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createTime;
 
     //收藏用户信息懒加载
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
@@ -45,6 +49,14 @@ public class ActionCollection implements Serializable {
 
     public void setActionCollectionId(Integer actionCollectionId) {
         this.actionCollectionId = actionCollectionId;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
     }
 
     public void setCollector(User collector) {

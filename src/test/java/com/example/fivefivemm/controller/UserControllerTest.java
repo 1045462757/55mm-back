@@ -67,6 +67,16 @@ public class UserControllerTest {
 
     @Test
     public void retrieveOtherInformationTest() {
-        System.out.println(userController.retrieveOtherInformation(2, 2));
+        System.out.println(userController.retrieveOtherInformation(1, 2));
+    }
+
+    @Test
+    public void RetrieveFocusTest() {
+        System.out.println(userController.RetrieveFocus(4));
+    }
+
+    @Test
+    public void RetrieveFansTest() {
+        System.out.println(userController.RetrieveFans(4));
     }
 }

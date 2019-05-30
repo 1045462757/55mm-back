@@ -4,6 +4,7 @@ import com.example.fivefivemm.entity.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * 用户关注表,保存用户之间的关注信息
@@ -18,6 +19,9 @@ public class UserCollection implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userCollectionId;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createTime;
 
     //关注用户信息懒加载
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
@@ -43,6 +47,14 @@ public class UserCollection implements Serializable {
 
     public void setUserCollectionId(Integer userCollectionId) {
         this.userCollectionId = userCollectionId;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
     }
 
     public User getFocus() {

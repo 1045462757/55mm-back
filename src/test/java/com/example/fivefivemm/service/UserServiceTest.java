@@ -111,4 +111,19 @@ public class UserServiceTest extends AbstractTransactionalJUnit4SpringContextTes
             System.out.println(resetPasswordResult.getMessage());
         }
     }
+
+    @Test
+    public void RetrieveActionCollectionTest() {
+        System.out.println(userService.RetrieveActionCollection(3));
+    }
+
+    @Test
+    public void RetrieveFansTest() {
+        System.out.println(userService.RetrieveFans(4));
+    }
+
+    @Test
+    public void RetrieveFocusTest() {
+        System.out.println(userService.RetrieveFocus(4));
+    }
 }

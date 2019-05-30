@@ -98,4 +98,28 @@ public interface UserService {
      * 2.不存在的用户
      */
     Result resetPassword(String email);
+
+    /**
+     * 获取用户收藏的动态
+     *
+     * @param userId 用户Id
+     * @return 用户的收藏动态集合或null
+     */
+    Set<Action> RetrieveActionCollection(Integer userId);
+
+    /**
+     * 获取用户的粉丝
+     *
+     * @param userId 用户Id
+     * @return 用户的粉丝集合或null
+     */
+    Set<User> RetrieveFans(Integer userId);
+
+    /**
+     * 获取用户的关注
+     *
+     * @param userId 用户Id
+     * @return 用户的关注集合或null
+     */
+    Set<User> RetrieveFocus(Integer userId);
 }

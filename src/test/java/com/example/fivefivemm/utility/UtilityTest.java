@@ -20,4 +20,9 @@ public class UtilityTest {
             System.out.println(s);
         }
     }
+
+    @Test
+    public void VerificationCodeTest(){
+        System.out.println(Utility.VerificationCode());
+    }
 }

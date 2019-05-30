@@ -28,11 +28,11 @@ public class ActionWatchControllerTest {
     @Test
     public void CreateActionWatchTest() {
         User user = new User();
-        user.setUserId(4);
+        user.setUserId(3);
 
         Action action = new Action();
-        action.setActionId(29);
-        action.setAuthor(new User(1));
+        action.setActionId(3);
+        action.setAuthor(new User(4));
 
         System.out.println(actionWatchController.CreateActionWatch(new ActionWatch(user, action)));
     }

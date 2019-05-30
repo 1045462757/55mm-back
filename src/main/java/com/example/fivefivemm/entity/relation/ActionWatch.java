@@ -4,6 +4,7 @@ import com.example.fivefivemm.entity.action.Action;
 import com.example.fivefivemm.entity.user.User;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
  * 约拍记录表
@@ -18,6 +19,9 @@ public class ActionWatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer actionWatchId;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createTime;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
     @JoinColumn(name = "watcherId", referencedColumnName = "userId")
@@ -41,6 +45,14 @@ public class ActionWatch {
 
     public void setActionWatchId(Integer actionWatchId) {
         this.actionWatchId = actionWatchId;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
     }
 
     public User getWatcher() {

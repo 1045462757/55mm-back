@@ -1,6 +1,8 @@
 package com.example.fivefivemm.service.Implements;
 
 import com.example.fivefivemm.entity.action.Action;
+import com.example.fivefivemm.entity.relation.ActionCollection;
+import com.example.fivefivemm.entity.relation.UserCollection;
 import com.example.fivefivemm.entity.user.User;
 import com.example.fivefivemm.repository.UserRepository;
 import com.example.fivefivemm.service.UserService;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -202,5 +205,56 @@ public class UserServiceImplements implements UserService {
         existUser.setPassword(Utility.md5(newPassword));
         logger.info("重置用户密码:" + email);
         return new Result(Result.success, null, newPassword);
+    }
+
+    @Override
+    @Transactional
+    public Set<Action> RetrieveActionCollection(Integer userId) {
+        User existUser = userRepository.findByUserId(userId);
+        if (existUser != null) {
+            Set<ActionCollection> actionCollections = existUser.getActionCollections();
+            Set<Action> collectActions = new HashSet<>();
+            for (ActionCollection actionCollection : actionCollections) {
+                collectActions.add(actionCollection.getCollectAction());
+            }
+            logger.info("获取用户收藏动态: 用户Id:" + userId + " 动态:" + collectActions);
+            return collectActions;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @Transactional
+    public Set<User> RetrieveFans(Integer userId) {
+        User existUser = userRepository.findByUserId(userId);
+        if (existUser != null) {
+            Set<UserCollection> userCollections = existUser.getFans();
+            Set<User> fans = new HashSet<>();
+            for (UserCollection userCollection : userCollections) {
+                fans.add(userCollection.getFans());
+            }
+            logger.info("获取用户粉丝: 用户Id:" + userId + " 粉丝:" + fans);
+            return fans;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @Transactional
+    public Set<User> RetrieveFocus(Integer userId) {
+        User existUser = userRepository.findByUserId(userId);
+        if (existUser != null) {
+            Set<UserCollection> userCollections = existUser.getFocus();
+            Set<User> focus = new HashSet<>();
+            for (UserCollection userCollection : userCollections) {
+                focus.add(userCollection.getFocus());
+            }
+            logger.info("获取用户关注: 用户Id:" + userId + " 关注:" + focus);
+            return focus;
+        } else {
+            return null;
+        }
     }
 }

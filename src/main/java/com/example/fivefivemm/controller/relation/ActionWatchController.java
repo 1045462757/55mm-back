@@ -2,8 +2,11 @@ package com.example.fivefivemm.controller.relation;
 
 import com.example.fivefivemm.entity.message.Message;
 import com.example.fivefivemm.entity.relation.ActionWatch;
+import com.example.fivefivemm.entity.user.User;
 import com.example.fivefivemm.service.ActionWatchService;
 import com.example.fivefivemm.service.MessageService;
+import com.example.fivefivemm.service.SendSmsService;
+import com.example.fivefivemm.service.UserService;
 import com.example.fivefivemm.utility.Result;
 import com.example.fivefivemm.utility.Utility;
 import org.springframework.stereotype.Controller;
@@ -16,9 +19,12 @@ import javax.annotation.Resource;
  * <p>
  * 增加信息生成
  * 2019年5月23日10:29:16
+ * <p>
+ * 增加短信通知
+ * 2019年5月29日22:09:55
  *
  * @author tiga
- * @version 1.1
+ * @version 1.2
  * @since 2019年5月20日18:34:16
  */
 //生产环境
@@ -33,6 +39,12 @@ public class ActionWatchController {
 
     @Resource
     private MessageService messageService;
+
+    @Resource
+    private SendSmsService sendSmsService;
+
+    @Resource
+    private UserService userService;
 
     /**
      * 生成约拍记录
@@ -56,6 +68,14 @@ public class ActionWatchController {
         } else if (!createMessageResult.getStatus().equals(Result.success)) {
             return Utility.ResultBody(102, createMessageResult.getMessage(), null);
         } else {
+            //发送短信通知
+//            Result retrieveInformationResult = userService.retrieveInformation(actionWatch.getWatcher().getUserId());
+//            if (retrieveInformationResult.getStatus().equals(Result.success)) {
+//                User existUser = (User) retrieveInformationResult.getData();
+//                if (existUser != null) {
+//                    sendSmsService.SendSmsForMessage(existUser.getPhone());
+//                }
+//            }
             return Utility.ResultBody(200, null, null);
         }
     }

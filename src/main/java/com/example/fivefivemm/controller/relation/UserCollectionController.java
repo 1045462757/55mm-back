@@ -1,7 +1,6 @@
 package com.example.fivefivemm.controller.relation;
 
 import com.example.fivefivemm.service.CollectionService;
-import com.example.fivefivemm.service.UserService;
 import com.example.fivefivemm.utility.Result;
 import com.example.fivefivemm.utility.Utility;
 import org.springframework.stereotype.Controller;

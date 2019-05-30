@@ -39,6 +39,7 @@ public class ActionServiceImplements implements ActionService {
         if (action.getAuthor().getUserId() == null) {
             return new Result(Result.failed, "作者Id为空");
         }
+        action.setCollect(0);
         logger.info("发表新动态:" + action);
         return new Result(Result.success, actionRepository.save(action));
     }

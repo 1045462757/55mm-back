@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 用户控制器
@@ -24,9 +27,12 @@ import java.util.Map;
  * <p>
  * 添加获取是否关注用户
  * 2019年5月27日13:41:23
+ * <p>
+ * 添加获取用户关注和粉丝
+ * 2019年5月27日20:09:55
  *
  * @author tiga
- * @version 1.2
+ * @version 1.3
  * @since 2019年5月13日20:06:27
  */
 
@@ -220,5 +226,33 @@ public class UserController {
         } else {
             return Utility.ResultBody(103, retrieveInformationResult.getMessage(), null);
         }
+    }
+
+    /**
+     * 获取用户的关注
+     *
+     * @param userId 用户Id
+     * @return data:用户关注的对象集合
+     */
+    @GetMapping("/user/focus")
+    @ResponseBody
+    public String RetrieveFocus(@RequestParam Integer userId) {
+        Set<User> focusSets = userService.RetrieveFocus(userId);
+        List<User> FocusList = new ArrayList<>(focusSets);
+        return Utility.ResultBody(200, null, Utility.userListBody(FocusList));
+    }
+
+    /**
+     * 获取用户的粉丝
+     *
+     * @param userId 用户Id
+     * @return data：用户的粉丝集合
+     */
+    @GetMapping("/user/fans")
+    @ResponseBody
+    public String RetrieveFans(@RequestParam Integer userId) {
+        Set<User> fansSets = userService.RetrieveFans(userId);
+        List<User> FansList = new ArrayList<>(fansSets);
+        return Utility.ResultBody(200, null, Utility.userListBody(FansList));
     }
 }
