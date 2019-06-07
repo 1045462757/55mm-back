@@ -258,6 +258,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "[userId:" + userId + ",name:" + name + "]";
+        return "[用户信息:用户Id:" + userId + ",账号:" + account + ",姓名:" + name + "]";
     }
 }

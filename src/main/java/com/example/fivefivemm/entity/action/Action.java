@@ -156,7 +156,7 @@ public class Action {
 
     @Override
     public String toString() {
-        return "[Action:actionId:" + actionId + ",title:" + title + ",createTime:" + createTime + ",address:" + address + ",cost:" + cost + ",content:" + content + ",authorId:" + author.getUserId() +
+        return "[动态:动态Id:" + actionId + ",标题:" + title + ",发表时间:" + createTime + ",地区:" + address + ",价格:" + cost + ",作者Id:" + author.getUserId() +
                 "]";
     }
 }

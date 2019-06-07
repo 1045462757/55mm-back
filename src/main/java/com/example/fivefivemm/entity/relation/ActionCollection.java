@@ -30,8 +30,8 @@ public class ActionCollection implements Serializable {
     @JoinColumn(name = "collectorId", referencedColumnName = "userId")
     private User collector;
 
-    //收藏博客信息懒加载
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Action.class)
+    //收藏博客信息急加载
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Action.class)
     @JoinColumn(name = "actionId", referencedColumnName = "actionId")
     private Action collectAction;
 

@@ -10,11 +10,8 @@ public interface ActionService {
     /**
      * 发表动态
      *
-     * @param action 动态对象
-     * @return success data:保存的动态
-     * failed message
-     * 1.action对象为空
-     * 2.作者Id为空
+     * @param action 动态对象，需包含作者Id,标题，地区，价格，内容
+     * @return data:保存的动态 message 1.参数无效
      */
     Result CreateAction(Action action);
 
@@ -22,10 +19,7 @@ public interface ActionService {
      * 查询动态
      *
      * @param actionId 动态Id
-     * @return success data:Action对象
-     * failed message
-     * 1.action对象为空
-     * 2.该动态不存在
+     * @return data:该动态对象 message 1.参数错误 2.该动态不存在
      */
     Result RetrieveAction(Integer actionId);
 
@@ -39,24 +33,16 @@ public interface ActionService {
     /**
      * 修改动态
      *
-     * @param action 动态对象
-     * @return success
-     * failed message
-     * 1.action对象为空
-     * 2.该动态不存在
-     * 3.没有权限修改，您不是该动态的作者
+     * @param action 动态对象,需包含动态Id，作者Id，标题，地区，价格，内容
+     * @return message 1.参数无效 2.该动态不存在 3.没有权限修改，您不是该动态的作者
      */
     Result UpdateAction(Action action);
 
     /**
      * 删除动态
      *
-     * @param action 动态对象
-     * @return success
-     * faild message
-     * 1.action对象为空
-     * 2.该动态不存在
-     * 3.没有权限删除，您不是该动态的作者
+     * @param action 动态对象，需包含动态Id，作者Id
+     * @return message  1.参数无效 2.该动态不存在 3.没有权限删除，您不是该动态的作者
      */
     Result DeleteAction(Action action);
 }

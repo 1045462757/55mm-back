@@ -5,10 +5,10 @@ import com.example.fivefivemm.entity.relation.ActionCollection;
 import com.example.fivefivemm.entity.relation.UserCollection;
 import com.example.fivefivemm.entity.user.User;
 import com.example.fivefivemm.repository.ActionCollectionRepository;
+import com.example.fivefivemm.repository.ActionRepository;
 import com.example.fivefivemm.repository.UserCollectionRepository;
-import com.example.fivefivemm.service.ActionService;
+import com.example.fivefivemm.repository.UserRepository;
 import com.example.fivefivemm.service.CollectionService;
-import com.example.fivefivemm.service.UserService;
 import com.example.fivefivemm.utility.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +19,9 @@ import javax.transaction.Transactional;
 
 /**
  * 收藏业务类
+ * <p>
+ * 优化代码
+ * 2019年6月7日11:45:22
  *
  * @author tiga
  * @version 1.0
@@ -28,10 +31,10 @@ import javax.transaction.Transactional;
 public class CollectionServiceImplements implements CollectionService {
 
     @Resource
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Resource
-    private ActionService actionService;
+    private ActionRepository actionRepository;
 
     @Resource
     private ActionCollectionRepository actionCollectionRepository;
@@ -45,25 +48,33 @@ public class CollectionServiceImplements implements CollectionService {
     @Transactional
     public Result addActionCollection(Integer userId, Integer actionId) {
         if (userId == null || actionId == null) {
-            return new Result(Result.failed, "参数不合法");
-        }
-        Result getUserResult = userService.retrieveInformation(userId);
-        Result getActionResult = actionService.RetrieveAction(actionId);
-        if (!getUserResult.getStatus().equals(Result.success) || !getActionResult.getStatus().equals(Result.success)) {
-            return new Result(Result.failed, "不存在的用户或动态");
+            return new Result(Result.failed, "参数无效");
         }
 
-        User validUser = (User) getUserResult.getData();
-        Action validAction = (Action) getActionResult.getData();
+        User validUser = userRepository.findByUserId(userId);
+        if (validUser == null) {
+            return new Result(Result.failed, "不存在的用户");
+        }
+
+        Action validAction = actionRepository.findByActionId(actionId);
+        if (validAction == null) {
+            return new Result(Result.failed, "不存在的动态");
+        }
 
         ActionCollection actionCollection = actionCollectionRepository.findByCollectorAndCollectAction(validUser, validAction);
         if (actionCollection != null) {
             return new Result(Result.failed, "已存在的收藏关系");
         }
-        int collect = validAction.getCollect();
+
+        int collect;
+        if (validAction.getCollect() == null) {
+            collect = 0;
+        } else {
+            collect = validAction.getCollect();
+        }
         validAction.setCollect(collect + 1);
         actionCollectionRepository.save(new ActionCollection(validUser, validAction));
-        logger.info("保存收藏:" + " 收藏用户Id:" + validUser.getUserId() + ", 收藏动态Id:" + validAction.getActionId());
+        logger.info("保存收藏:[收藏用户Id:" + validUser.getUserId() + ", 收藏动态Id:" + validAction.getActionId() + "]");
         return new Result(Result.success);
     }
 
@@ -71,54 +82,52 @@ public class CollectionServiceImplements implements CollectionService {
     @Transactional
     public Result removeActionCollection(Integer userId, Integer actionId) {
         if (userId == null || actionId == null) {
-            return new Result(Result.failed, "参数不合法");
+            return new Result(Result.failed, "参数无效");
         }
-        Result getUserResult = userService.retrieveInformation(userId);
-        Result getActionResult = actionService.RetrieveAction(actionId);
-        if (!getUserResult.getStatus().equals(Result.success) || !getActionResult.getStatus().equals(Result.success)) {
-            return new Result(Result.failed, "不存在的用户或动态");
+
+        Action validAction = actionRepository.findByActionId(actionId);
+        if (validAction == null) {
+            return new Result(Result.failed, "不存在的动态");
         }
-        User validUser = (User) getUserResult.getData();
-        Action validAction = (Action) getActionResult.getData();
-        ActionCollection actionCollection = actionCollectionRepository.findByCollectorAndCollectAction(validUser, validAction);
+
+        ActionCollection actionCollection = actionCollectionRepository.findByCollectorAndCollectAction(new User(userId), validAction);
         if (actionCollection == null) {
             return new Result(Result.failed, "不存在的收藏关系");
         }
-        int collect = validAction.getCollect();
+
+        int collect;
+        if (validAction.getCollect() == null) {
+            collect = 0;
+        } else {
+            collect = validAction.getCollect();
+        }
         validAction.setCollect(collect - 1);
         actionCollectionRepository.deleteById(actionCollection.getActionCollectionId());
-        logger.info("删除收藏:" + " 收藏用户Id:" + validUser.getUserId() + ", 收藏动态Id:" + validAction.getActionId());
+        logger.info("删除收藏:[收藏关系Id:" + actionCollection.getActionCollectionId() + "]");
         return new Result(Result.success);
     }
 
     @Override
     public boolean findActionCollection(Integer userId, Integer actionId) {
-        Result getUserResult = userService.retrieveInformation(userId);
-        Result getActionResult = actionService.RetrieveAction(actionId);
-        if (getUserResult.getStatus().equals(Result.success) && getActionResult.getStatus().equals(Result.success)) {
-            User validUser = (User) getUserResult.getData();
-            Action validAction = (Action) getActionResult.getData();
-            ActionCollection actionCollection = actionCollectionRepository.findByCollectorAndCollectAction(validUser, validAction);
-            return (actionCollection != null);
-        } else {
+        if (userId == null || actionId == null) {
             return false;
         }
+        ActionCollection actionCollection = actionCollectionRepository.findByCollectorAndCollectAction(new User(userId), new Action(actionId));
+        return (actionCollection != null);
     }
 
     @Override
     @Transactional
     public Result addUserCollection(Integer focusId, Integer fansId) {
         if (focusId == null || fansId == null) {
-            return new Result(Result.failed, "参数不合法");
-        }
-        Result getFocusResult = userService.retrieveInformation(focusId);
-        Result getFansResult = userService.retrieveInformation(fansId);
-        if (!getFocusResult.getStatus().equals(Result.success) || !getFansResult.getStatus().equals(Result.success)) {
-            return new Result(Result.failed, "不存在的用户");
+            return new Result(Result.failed, "参数无效");
         }
 
-        User focus = (User) getFocusResult.getData();
-        User fans = (User) getFansResult.getData();
+        User focus = userRepository.findByUserId(fansId);
+        User fans = userRepository.findByUserId(fansId);
+        if (focus == null || fans == null) {
+            return new Result(Result.failed, "不存在的用户");
+        }
 
         UserCollection userCollection = userCollectionRepository.findByFocusAndFans(focus, fans);
         if (userCollection != null) {
@@ -126,45 +135,32 @@ public class CollectionServiceImplements implements CollectionService {
         }
 
         userCollectionRepository.save(new UserCollection(focus, fans));
-        logger.info("保存关注:" + " 关注用户Id:" + focus.getUserId() + ", 粉丝Id:" + fans.getUserId());
+        logger.info("保存关注:[关注用户Id:" + focus.getUserId() + ", 粉丝Id:" + fans.getUserId() + "]");
         return new Result(Result.success, null);
-
     }
 
     @Override
     @Transactional
     public Result removeUserCollection(Integer focusId, Integer fansId) {
         if (focusId == null || fansId == null) {
-            return new Result(Result.failed, "参数不合法");
-        }
-        Result getFocusResult = userService.retrieveInformation(focusId);
-        Result getFansResult = userService.retrieveInformation(fansId);
-        if (!getFocusResult.getStatus().equals(Result.success) || !getFansResult.getStatus().equals(Result.success)) {
-            return new Result(Result.failed, "不存在的用户");
+            return new Result(Result.failed, "参数无效");
         }
 
-        User focus = (User) getFocusResult.getData();
-        User fans = (User) getFansResult.getData();
-        UserCollection userCollection = userCollectionRepository.findByFocusAndFans(focus, fans);
+        UserCollection userCollection = userCollectionRepository.findByFocusAndFans(new User(focusId), new User(fansId));
         if (userCollection == null) {
             return new Result(Result.failed, "不存在的关注关系");
         }
         userCollectionRepository.deleteById(userCollection.getUserCollectionId());
-        logger.info("删除关注:" + " 关注用户Id:" + focus.getUserId() + ", 粉丝Id:" + fans.getUserId());
+        logger.info("删除关注:[关注关系Id:" + userCollection.getUserCollectionId() + "]");
         return new Result(Result.success);
     }
 
     @Override
     public boolean findUserCollection(Integer focusId, Integer fansId) {
-        Result getFocusResult = userService.retrieveInformation(focusId);
-        Result getFansResult = userService.retrieveInformation(fansId);
-        if (getFocusResult.getStatus().equals(Result.success) && getFansResult.getStatus().equals(Result.success)) {
-            User focus = (User) getFocusResult.getData();
-            User fans = (User) getFansResult.getData();
-            UserCollection userCollection = userCollectionRepository.findByFocusAndFans(focus, fans);
-            return (userCollection != null);
-        } else {
+        if (focusId == null || fansId == null) {
             return false;
         }
+        UserCollection userCollection = userCollectionRepository.findByFocusAndFans(new User(focusId), new User(fansId));
+        return (userCollection != null);
     }
 }

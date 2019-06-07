@@ -12,34 +12,34 @@ public interface Constants {
      */
     String actionPath = "F:/55mm/action/";
 
+    /**
+     * 本地图片服务器
+     */
+    String serverAddress = "http://127.0.0.1:8888/";
+
+    /**
+     * 本地默认头像
+     */
+    String defaultAvatar = "http://127.0.0.1:8888/avatar/default-avatar.png";
+
+    /**
+     * 本地图片存储地址
+     */
+    String imageAddress = "http://127.0.0.1:8888/action/";
+
 //    /**
-//     * 本地图片服务器
+//     * 生产环境图片服务器
 //     */
-//    String serverAddress = "http://127.0.0.1:8888/";
+//    String serverAddress = "https://hylovecode.cn/";
 //
 //    /**
-//     * 本地默认头像
+//     * 生产环境默认头像
 //     */
-//    String defaultAvatar = "http://127.0.0.1:8888/avatar/default-avatar.png";
+//    String defaultAvatar = "https://hylovecode.cn/avatar/default-avatar.png";
 //
 //    /**
-//     * 本地图片存储地址
+//     * 生产环境图片存储地址
 //     */
-//    String imageAddress = "http://127.0.0.1:8888/action/";
-
-    /**
-     * 生产环境图片服务器
-     */
-    String serverAddress = "https://hylovecode.cn/";
-
-    /**
-     * 生产环境默认头像
-     */
-    String defaultAvatar = "https://hylovecode.cn/avatar/default-avatar.png";
-
-    /**
-     * 生产环境图片存储地址
-     */
-    String imageAddress = "https://hylovecode.cn/action/";
+//    String imageAddress = "https://hylovecode.cn/action/";
 
 }

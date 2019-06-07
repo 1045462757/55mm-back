@@ -63,11 +63,11 @@ public class Result implements Serializable {
         this.data = data;
     }
 
-    public Result(Integer status, String message, Object data) {
-        this.status = status;
-        this.message = message;
-        this.data = data;
-    }
+//    public Result(Integer status, String message, Object data) {
+//        this.status = status;
+//        this.message = message;
+//        this.data = data;
+//    }
 
     @Override
     public String toString() {

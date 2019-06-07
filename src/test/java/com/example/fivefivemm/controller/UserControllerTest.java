@@ -31,12 +31,12 @@ public class UserControllerTest {
 
     @Test
     public void loginTest() {
-        System.out.println(userController.login(new User("12345678", "12345678910")));
+        System.out.println(userController.login(new User("123456789", "1234567")));
     }
 
     @Test
     public void retrieveInformationTest() {
-        System.out.println(userController.retrieveInformation(1));
+        System.out.println(userController.retrieveInformation(3));
     }
 
     @Test
@@ -72,11 +72,11 @@ public class UserControllerTest {
 
     @Test
     public void RetrieveFocusTest() {
-        System.out.println(userController.RetrieveFocus(4));
+        System.out.println(userController.retrieveFocus(4));
     }
 
     @Test
     public void RetrieveFansTest() {
-        System.out.println(userController.RetrieveFans(4));
+        System.out.println(userController.retrieveFans(4));
     }
 }

@@ -35,9 +35,9 @@ import java.util.*;
  * @since 2019年5月19日13:20:51
  */
 //生产环境
-@CrossOrigin(origins = "https://hylovecode.cn")
+//@CrossOrigin(origins = "https://hylovecode.cn")
 //本地测试
-//@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8080")
 @Controller
 public class ActionController {
 
@@ -164,58 +164,57 @@ public class ActionController {
         }
     }
 
-    /**
-     * 获取动态集合
-     *
-     * @param userId 用户Id
-     * @param type   查询类型 1.用户自己的动态 2.所有动态 3.用户收藏的动态
-     * @return success data:动态集合
-     * failed message
-     * 106 错误的查询类型
-     */
-    @GetMapping("/actions")
-    @ResponseBody
-    public String RetrieveActions(@RequestParam(required = false) Integer userId, @RequestParam Integer type) {
-        if (type == 1) {
-            Set<Action> userActionSets = userService.RetrieveUserActions(userId);
-            if (userActionSets == null || userActionSets.isEmpty()) {
-                return Utility.ResultBody(200, null, Utility.ActionListBody(null));
-            }
-            //对动态集合进行排序
-            List<Action> ActionList = new ArrayList<>(userActionSets);
-            Collections.sort(ActionList, new Comparator<Action>() {
-                @Override
-                public int compare(Action o1, Action o2) {
-                    return o1.getActionId() > o2.getActionId() ? -1 : 1;
-                }
-            });
-            return Utility.ResultBody(200, null, Utility.ActionListBody(ActionList));
-        } else if (type == 2) {
-            List<Action> actionList = actionService.RetrieveAllAction();
-            Collections.sort(actionList, new Comparator<Action>() {
-                @Override
-                public int compare(Action o1, Action o2) {
-                    return o1.getActionId() > o2.getActionId() ? -1 : 1;
-                }
-            });
-            return Utility.ResultBody(200, null, Utility.ActionListBody(actionList));
-        } else if (type == 3) {
-            Set<Action> actionCollectionSets = userService.RetrieveActionCollection(userId);
-            if (actionCollectionSets == null || actionCollectionSets.isEmpty()) {
-                return Utility.ResultBody(200, null, Utility.ActionListBody(null));
-            }
-            List<Action> ActionList = new ArrayList<>(actionCollectionSets);
-            //对动态集合进行排序
-            Collections.sort(ActionList, new Comparator<Action>() {
-                @Override
-                public int compare(Action o1, Action o2) {
-                    return o1.getActionId() > o2.getActionId() ? -1 : 1;
-                }
-            });
-            return Utility.ResultBody(200, null, Utility.ActionListBody(ActionList));
-        } else {
-            return Utility.ResultBody(106, "错误的查询类型", null);
-        }
-    }
-
+//    /**
+//     * 获取动态集合
+//     *
+//     * @param userId 用户Id
+//     * @param type   查询类型 1.用户自己的动态 2.所有动态 3.用户收藏的动态
+//     * @return success data:动态集合
+//     * failed message
+//     * 106 错误的查询类型
+//     */
+//    @GetMapping("/actions")
+//    @ResponseBody
+//    public String RetrieveActions(@RequestParam(required = false) Integer userId, @RequestParam Integer type) {
+//        if (type == 1) {
+//            Set<Action> userActionSets = userService.retrieveUserActions(userId);
+//            if (userActionSets == null || userActionSets.isEmpty()) {
+//                return Utility.ResultBody(200, null, Utility.ActionListBody(null));
+//            }
+//            //对动态集合进行排序
+//            List<Action> ActionList = new ArrayList<>(userActionSets);
+//            Collections.sort(ActionList, new Comparator<Action>() {
+//                @Override
+//                public int compare(Action o1, Action o2) {
+//                    return o1.getActionId() > o2.getActionId() ? -1 : 1;
+//                }
+//            });
+//            return Utility.ResultBody(200, null, Utility.ActionListBody(ActionList));
+//        } else if (type == 2) {
+//            List<Action> actionList = actionService.RetrieveAllAction();
+//            Collections.sort(actionList, new Comparator<Action>() {
+//                @Override
+//                public int compare(Action o1, Action o2) {
+//                    return o1.getActionId() > o2.getActionId() ? -1 : 1;
+//                }
+//            });
+//            return Utility.ResultBody(200, null, Utility.ActionListBody(actionList));
+//        } else if (type == 3) {
+//            Set<Action> actionCollectionSets = userService.retrieveActionCollection(userId);
+//            if (actionCollectionSets == null || actionCollectionSets.isEmpty()) {
+//                return Utility.ResultBody(200, null, Utility.ActionListBody(null));
+//            }
+//            List<Action> ActionList = new ArrayList<>(actionCollectionSets);
+//            //对动态集合进行排序
+//            Collections.sort(ActionList, new Comparator<Action>() {
+//                @Override
+//                public int compare(Action o1, Action o2) {
+//                    return o1.getActionId() > o2.getActionId() ? -1 : 1;
+//                }
+//            });
+//            return Utility.ResultBody(200, null, Utility.ActionListBody(ActionList));
+//        } else {
+//            return Utility.ResultBody(106, "错误的查询类型", null);
+//        }
+//    }
 }

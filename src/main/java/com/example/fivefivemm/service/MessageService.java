@@ -8,10 +8,8 @@ public interface MessageService {
     /**
      * 生成消息
      *
-     * @param message 消息对象包含关注者用户Id，动态
-     * @return failed message
-     * 1.参数不合法
-     * 2.消息已存在
+     * @param message 消息对象包含关注者用户Id，动态Id
+     * @return message 1.参数无效 2.不存在的动态 3.不存在的用户 4.消息已存在
      */
     Result CreateMessage(Message message);
 
@@ -19,8 +17,7 @@ public interface MessageService {
      * 通过约拍者Id查找消息
      *
      * @param watcherId 约拍者用户Id
-     * @return failed message
-     * 1.watcherId为空
+     * @return message 1.参数无效
      */
     Result RetrieveForWatcher(Integer watcherId);
 
@@ -28,8 +25,7 @@ public interface MessageService {
      * 通过动态的作者Id查找消息
      *
      * @param actionAuthorId 动态的作者Id
-     * @return failed message
-     * 1.actionAuthorId为空
+     * @return message 1.参数无效
      */
     Result RetrieveForActionAuthorId(Integer actionAuthorId);
 
@@ -37,19 +33,16 @@ public interface MessageService {
      * 回复约拍请求
      *
      * @param messageId 消息Id
-     * @return failed message
-     * 1.参数不合法
-     * 2.消息不存在
+     * @param accept    消息状态
+     * @return message 1.参数无效 2.消息不存在
      */
-    Result UpdateIsAccept(Integer messageId,String accept);
+    Result UpdateIsAccept(Integer messageId, String accept);
 
     /**
      * 浏览消息
      *
      * @param messageId 消息Id
-     * @return failed message
-     * 1.参数不合法
-     * 2.消息不存在
+     * @return message 1.参数无效 2.消息不存在
      */
     Result UpdateIsRead(Integer messageId);
 
@@ -57,9 +50,7 @@ public interface MessageService {
      * 删除消息
      *
      * @param message 消息对象包含messageId
-     * @return failed message
-     * 1.参数不合法
-     * 2.消息不存在
+     * @return message 1.参数无效 2.消息不存在
      */
     Result DeleteMessage(Message message);
 }

@@ -8,7 +8,7 @@ public interface SendSmsService {
      * 发送通知短信
      *
      * @param phone 手机号码
-     * @return
+     * @return 。。。
      */
     SendSmsResponse SendSmsForMessage(String phone);
 
@@ -17,7 +17,7 @@ public interface SendSmsService {
      *
      * @param phone 手机号码
      * @param code  验证码
-     * @return
+     * @return 。。。
      */
     SendSmsResponse SendSmsForCode(String phone, String code);
 }

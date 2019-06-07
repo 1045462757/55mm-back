@@ -37,5 +37,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      * @return 存在该用户Id则返回该用户，不存在返回null
      */
     User findByUserId(Integer userId);
-
 }

@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 用户控制器
@@ -37,9 +35,9 @@ import java.util.Set;
  */
 
 //生产环境
-@CrossOrigin(origins = "https://hylovecode.cn")
+//@CrossOrigin(origins = "https://hylovecode.cn")
 //本地测试
-//@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8080")
 @Controller
 public class UserController {
 
@@ -56,11 +54,7 @@ public class UserController {
      * 用户注册
      *
      * @param user 用户对象
-     * @return failed massage
-     * 101
-     * 1.user对象为空
-     * 2.该邮箱已被注册
-     * 3.该账号已被注册
+     * @return massage 101 1.参数无效 2.该账号已被注册 3.该邮箱已被注册
      */
     @PostMapping("/user/account")
     @ResponseBody
@@ -77,12 +71,7 @@ public class UserController {
      * 用户登录
      *
      * @param user 用户对象
-     * @return success data:用户Id
-     * failed message
-     * 102
-     * *1.user对象为空
-     * 2.账号不存在
-     * 3.密码错误
+     * @return data:用户Id message 102 1.参数无效 2.账号不存在 3.密码错误
      */
     @PostMapping("/user")
     @ResponseBody
@@ -99,11 +88,7 @@ public class UserController {
      * 获取用户信息
      *
      * @param userId 用户Id
-     * @return success data:user对象
-     * failed message
-     * 103
-     * 1.userId为空
-     * 2.该用户不存在
+     * @return data:user对象 message 103 1.userId为空 2.该用户不存在
      */
     @GetMapping("/user/information")
     @ResponseBody
@@ -120,10 +105,7 @@ public class UserController {
      * 修改用户信息
      *
      * @param user 用户对象
-     * @return failed message
-     * 104
-     * 1.user对象为空
-     * 2.不存在的用户
+     * @return message 104 1.参数无效 2.该用户不存在
      */
     @PutMapping("/user/information")
     @ResponseBody
@@ -141,12 +123,7 @@ public class UserController {
      *
      * @param avatar 头像图片
      * @param userId 用户Id
-     * @return success data:头像图片地址
-     * failed message
-     * 105
-     * 1.user对象为空
-     * 2.不存在的用户
-     * 3.头像地址为空
+     * @return data:头像图片地址 message 105 1.参数无效 2.该用户不存在
      */
     @PostMapping("/user/avatar")
     @ResponseBody
@@ -165,11 +142,7 @@ public class UserController {
      * @param userId      用户Id
      * @param oldPassword 旧密码
      * @param newPassword 新密码
-     * @return failed message
-     * 106
-     * 1.参数不合法
-     * 2.不存在的用户
-     * 3.旧密码错误
+     * @return message 106 1.参数无效 2.该用户不存在 3.旧密码错误
      */
     @PutMapping("/user/password")
     @ResponseBody
@@ -186,10 +159,7 @@ public class UserController {
      * 通过邮箱重置密码
      *
      * @param email 用户注册的邮箱
-     * @return failed message
-     * 107
-     * 1.邮箱为空
-     * 2.不存在的用户
+     * @return message 107 1.参数无效 2.该用户不存在
      */
     @PostMapping("/user/password")
     @ResponseBody
@@ -207,11 +177,7 @@ public class UserController {
      * 获取其他用户信息
      *
      * @param userId 用户Id
-     * @return success data:user对象
-     * failed message
-     * 108
-     * 1.userId为空
-     * 2.该用户不存在
+     * @return data:user对象 message 108 1.userId为空 2.该用户不存在
      */
     @GetMapping("/user/information/others")
     @ResponseBody
@@ -236,10 +202,14 @@ public class UserController {
      */
     @GetMapping("/user/focus")
     @ResponseBody
-    public String RetrieveFocus(@RequestParam Integer userId) {
-        Set<User> focusSets = userService.RetrieveFocus(userId);
-        List<User> FocusList = new ArrayList<>(focusSets);
-        return Utility.ResultBody(200, null, Utility.userListBody(FocusList));
+    public String retrieveFocus(@RequestParam Integer userId) {
+        Result retrieveFocusResult = userService.retrieveFocus(userId);
+        if (retrieveFocusResult.getStatus().equals(Result.success)) {
+            List<User> FocusList = (List<User>) retrieveFocusResult.getData();
+            return Utility.ResultBody(200, null, Utility.userListBody(FocusList));
+        } else {
+            return Utility.ResultBody(104, retrieveFocusResult.getMessage(), null);
+        }
     }
 
     /**
@@ -250,9 +220,13 @@ public class UserController {
      */
     @GetMapping("/user/fans")
     @ResponseBody
-    public String RetrieveFans(@RequestParam Integer userId) {
-        Set<User> fansSets = userService.RetrieveFans(userId);
-        List<User> FansList = new ArrayList<>(fansSets);
-        return Utility.ResultBody(200, null, Utility.userListBody(FansList));
+    public String retrieveFans(@RequestParam Integer userId) {
+        Result retrieveFansResult = userService.retrieveFans(userId);
+        if (retrieveFansResult.getStatus().equals(Result.success)) {
+            List<User> FansList = (List<User>) retrieveFansResult.getData();
+            return Utility.ResultBody(200, null, Utility.userListBody(FansList));
+        } else {
+            return Utility.ResultBody(104, retrieveFansResult.getMessage(), null);
+        }
     }
 }

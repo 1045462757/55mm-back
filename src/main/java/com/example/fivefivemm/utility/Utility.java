@@ -2,6 +2,8 @@ package com.example.fivefivemm.utility;
 
 import com.example.fivefivemm.entity.action.Action;
 import com.example.fivefivemm.entity.message.Message;
+import com.example.fivefivemm.entity.relation.ActionCollection;
+import com.example.fivefivemm.entity.relation.UserCollection;
 import com.example.fivefivemm.entity.user.User;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -319,88 +321,6 @@ public class Utility {
         return res;
     }
 
-//    /**
-//     * 消息接受者Json构造
-//     *
-//     * @param message 消息对象
-//     * @return Map集合
-//     */
-//    public static Map<String, Object> MessageBodyForAuthor(Message message) {
-//        Map<String, Object> messageMap = new HashMap<>();
-//        Map<String, Object> watcherMap = new HashMap<>();
-//        Map<String, Object> actionMap = new HashMap<>();
-////        Map<String, Object> actionAuthorMap = new HashMap<>();
-//
-//        messageMap.put("messageId", message.getMessageId());
-//        messageMap.put("time", message.getCreateTime().toString());
-//        messageMap.put("isRead", message.isRead());
-//        messageMap.put("isAccept", message.isAccept());
-//
-//        watcherMap.put("userId", message.getUser().getUserId());
-//        watcherMap.put("name", message.getUser().getName());
-//        watcherMap.put("avatar", message.getUser().getAvatar());
-//        watcherMap.put("sex", message.getUser().getSex());
-//        watcherMap.put("type", message.getUser().getType());
-//
-//        actionMap.put("actionId", message.getAction().getActionId());
-//        actionMap.put("title", message.getAction().getTitle());
-////        actionMap.put("cost", message.getAction().getCost());
-////        actionMap.put("address", message.getAction().getAddress());
-////        actionMap.put("time", message.getAction().getCreateTime().toString());
-//
-////        actionAuthorMap.put("userId", message.getAction().getAuthor().getUserId());
-////        actionAuthorMap.put("name", message.getAction().getAuthor().getName());
-////        actionAuthorMap.put("avatar", message.getAction().getAuthor().getAvatar());
-////        actionAuthorMap.put("sex", message.getAction().getAuthor().getSex());
-////        actionAuthorMap.put("type", message.getAction().getAuthor().getType());
-//
-////        actionMap.put("author", actionAuthorMap);
-//        messageMap.put("watcher", watcherMap);
-//        messageMap.put("action", actionMap);
-//        return messageMap;
-//    }
-
-//    /**
-//     * 消息发起者Json构造
-//     *
-//     * @param message 消息对象
-//     * @return Map集合
-//     */
-//    public static Map<String, Object> MessageBodyForWatcher(Message message) {
-//        Map<String, Object> messageMap = new HashMap<>();
-////        Map<String, Object> watcherMap = new HashMap<>();
-//        Map<String, Object> actionMap = new HashMap<>();
-//        Map<String, Object> actionAuthorMap = new HashMap<>();
-//
-//        messageMap.put("messageId", message.getMessageId());
-//        messageMap.put("time", message.getCreateTime().toString());
-//        messageMap.put("isRead", message.isRead());
-//        messageMap.put("isAccept", message.isAccept());
-//
-////        watcherMap.put("userId", message.getUser().getUserId());
-////        watcherMap.put("name", message.getUser().getName());
-////        watcherMap.put("avatar", message.getUser().getAvatar());
-////        watcherMap.put("sex", message.getUser().getSex());
-////        watcherMap.put("type", message.getUser().getType());
-//
-//        actionMap.put("actionId", message.getAction().getActionId());
-//        actionMap.put("title", message.getAction().getTitle());
-////        actionMap.put("cost", message.getAction().getCost());
-////        actionMap.put("address", message.getAction().getAddress());
-////        actionMap.put("time", message.getAction().getCreateTime().toString());
-//
-//        actionAuthorMap.put("userId", message.getAction().getAuthor().getUserId());
-//        actionAuthorMap.put("name", message.getAction().getAuthor().getName());
-//        actionAuthorMap.put("avatar", message.getAction().getAuthor().getAvatar());
-//        actionAuthorMap.put("sex", message.getAction().getAuthor().getSex());
-//        actionAuthorMap.put("type", message.getAction().getAuthor().getType());
-//
-//        actionMap.put("author", actionAuthorMap);
-////        messageMap.put("watcher", watcherMap);
-//        messageMap.put("action", actionMap);
-//        return messageMap;
-//    }
-
     /**
      * 消息Json构造
      *
@@ -450,11 +370,6 @@ public class Utility {
         if (messageList != null && messageList.size() > 0) {
             JSONArray messageArray = new JSONArray();
             for (Message message : messageList) {
-//                if (type == 1) {
-//                    messageArray.add(MessageBodyForAuthor(message));
-//                } else {
-//                    messageArray.add(MessageBodyForWatcher(message));
-//                }
                 messageArray.add(MessageBody(message, type));
             }
             return messageArray;
@@ -481,5 +396,89 @@ public class Utility {
         } else {
             return 0;
         }
+    }
+
+    /**
+     * 动态收藏按时间排序
+     *
+     * @param list 动态集合
+     */
+    public static void ActionCollecitonListSort(List<ActionCollection> list) {
+        Collections.sort(list, new Comparator<ActionCollection>() {
+            @Override
+            public int compare(ActionCollection o1, ActionCollection o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date dt1 = format.parse(o1.getCreateTime().toString());
+                    Date dt2 = format.parse(o2.getCreateTime().toString());
+                    if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+
+    /**
+     * 动态按时间排序
+     *
+     * @param list 动态集合
+     */
+    public static void ActionListSort(List<Action> list) {
+        Collections.sort(list, new Comparator<Action>() {
+            @Override
+            public int compare(Action o1, Action o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try {
+                    Date dt1 = format.parse(o1.getCreateTime().toString());
+                    Date dt2 = format.parse(o2.getCreateTime().toString());
+                    if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+    }
+
+    /**
+     * 用户关注按时间排序
+     *
+     * @param list 动态集合
+     */
+    public static void UserCollecitonListSort(List<UserCollection> list) {
+        Collections.sort(list, new Comparator<UserCollection>() {
+            @Override
+            public int compare(UserCollection o1, UserCollection o2) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date dt1 = format.parse(o1.getCreateTime().toString());
+                    Date dt2 = format.parse(o2.getCreateTime().toString());
+                    if (dt1.getTime() < dt2.getTime()) {
+                        return 1;
+                    } else if (dt1.getTime() > dt2.getTime()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
     }
 }

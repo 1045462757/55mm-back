@@ -17,9 +17,7 @@ public interface CollectionService {
      *
      * @param userId   用户Id
      * @param actionId 动态Id
-     * @return Result
-     * message
-     * 1.不存在的用户或动态
+     * @return message 1.参数无效 2.不存在的用户 3.不存在的动态 4.已存在的收藏关系
      */
     Result addActionCollection(Integer userId, Integer actionId);
 
@@ -28,9 +26,7 @@ public interface CollectionService {
      *
      * @param userId   用户Id
      * @param actionId 动态Id
-     * @return Result
-     * message
-     * data
+     * @return message 1.参数无效 2.不存在的动态 3.已存在的收藏关系
      */
     Result removeActionCollection(Integer userId, Integer actionId);
 
@@ -39,7 +35,7 @@ public interface CollectionService {
      *
      * @param userId   用户Id
      * @param actionId 动态Id
-     * @return
+     * @return 存在收藏返回true，不存在返回false
      */
     boolean findActionCollection(Integer userId, Integer actionId);
 
@@ -48,9 +44,7 @@ public interface CollectionService {
      *
      * @param focusId 关注的用户Id
      * @param fansId  粉丝用户Id
-     * @return Result
-     * message
-     * data
+     * @return message 1.参数无效 2.不存在的用户 3.已存在的关注关系
      */
     Result addUserCollection(Integer focusId, Integer fansId);
 
@@ -59,9 +53,7 @@ public interface CollectionService {
      *
      * @param focusId 关注的用户Id
      * @param fansId  粉丝用户Id
-     * @return Result
-     * message
-     * data
+     * @return message 1.参数无效 2.不存在的关注关系
      */
     Result removeUserCollection(Integer focusId, Integer fansId);
 
@@ -70,7 +62,7 @@ public interface CollectionService {
      *
      * @param focusId 关注的用户Id
      * @param fansId  粉丝用户Id
-     * @return
+     * @return 存在关注返回true，不存在返回false
      */
     boolean findUserCollection(Integer focusId, Integer fansId);
 }

@@ -23,13 +23,13 @@ public class UserCollection implements Serializable {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createTime;
 
-    //关注用户信息懒加载
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    //关注用户信息急加载
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
     @JoinColumn(name = "focusId", referencedColumnName = "userId")
     private User focus;
 
-    //粉丝信息懒加载
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    //粉丝信息急加载
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
     @JoinColumn(name = "fansId", referencedColumnName = "userId")
     private User fans;
 
