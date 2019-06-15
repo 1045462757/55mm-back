@@ -1,10 +1,12 @@
 package com.example.fivefivemm.service;
 
+import com.example.fivefivemm.entity.relation.UserCollection;
 import com.example.fivefivemm.entity.user.User;
-import com.example.fivefivemm.utility.Result;
+import com.example.fivefivemm.utility.BusinessResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -17,6 +19,9 @@ import java.util.List;
  * <p>
  * 优化代码
  * 2019年6月1日15:33:22
+ * <p>
+ * 又优化了代码
+ * 2019年6月14日10:26:58
  *
  * @author tiga
  * @version 1.1
@@ -45,11 +50,11 @@ public class UserServiceTest {
         users.add(new User("123456789", "12345678", "12345678@qq.com"));
 
         for (int i = 0; i < users.size(); i++) {
-            Result registerResult = userService.register(users.get(i));
-            if (registerResult.getStatus().equals(Result.success)) {
+            BusinessResult registerResult = userService.register(users.get(i));
+            if (registerResult.getStatus()) {
                 System.out.println("[注册成功:编号:" + (i + 1) + "]");
             } else {
-                System.out.println("[注册失败:编号:" + (i + 1) + ",原因:" + registerResult.getMessage() + "]");
+                System.out.println("[注册失败:编号:" + (i + 1) + ",错误代码:" + registerResult.getErrorCode() + ",错误原因:" + registerResult.getErrorMessage() + "]");
             }
         }
     }
@@ -72,11 +77,12 @@ public class UserServiceTest {
         users.add(new User("12345678", "12345678", "123456789@qq.com"));
 
         for (int i = 0; i < users.size(); i++) {
-            Result loginResult = userService.login(users.get(i));
-            if (loginResult.getStatus().equals(Result.success)) {
+            BusinessResult loginResult = userService.login(users.get(i));
+            if (loginResult.getStatus()) {
                 System.out.println("[登录成功:编号:" + (i + 1) + "]");
             } else {
-                System.out.println("[登录失败:编号:" + (i + 1) + ",原因:" + loginResult.getMessage() + "]");
+                System.out.println("[登录失败:编号:" + (i + 1) + ",错误代码:" + loginResult.getErrorCode() + ",错误原因:" + loginResult.getErrorMessage() + "]");
+
             }
         }
     }
@@ -94,11 +100,12 @@ public class UserServiceTest {
         users.add(3);
 
         for (int i = 0; i < users.size(); i++) {
-            Result retrieveInformationResult = userService.retrieveInformation(users.get(i));
-            if (retrieveInformationResult.getStatus().equals(Result.success)) {
+            BusinessResult retrieveInformationResult = userService.retrieveInformation(users.get(i));
+            if (retrieveInformationResult.getStatus()) {
                 System.out.println("[查询用户信息成功:编号:" + (i + 1) + "]");
             } else {
-                System.out.println("[查询用户信息失败:编号:" + (i + 1) + ",原因:" + retrieveInformationResult.getMessage() + "]");
+                System.out.println("[查询用户信息失败:编号:" + (i + 1) + ",错误代码:" + retrieveInformationResult.getErrorCode() + ",错误原因:" + retrieveInformationResult.getErrorMessage() + "]");
+
             }
         }
     }
@@ -129,11 +136,11 @@ public class UserServiceTest {
         users.add(user);
 
         for (int i = 0; i < users.size(); i++) {
-            Result updateInformationResult = userService.updateInformation(users.get(i));
-            if (updateInformationResult.getStatus().equals(Result.success)) {
+            BusinessResult updateInformationResult = userService.updateInformation(users.get(i));
+            if (updateInformationResult.getStatus()) {
                 System.out.println("[修改用户信息成功:编号:" + (i + 1) + "]");
             } else {
-                System.out.println("[修改用户信息失败:编号:" + (i + 1) + ",原因:" + updateInformationResult.getMessage() + "]");
+                System.out.println("[修改用户信息失败:编号:" + (i + 1) + ",原因:" + updateInformationResult.getErrorMessage() + "]");
             }
         }
     }
@@ -143,11 +150,11 @@ public class UserServiceTest {
 
         //TODO 待测试
 
-//        Result updatePasswordResult = userService.updatePassword(1, "12345678", "12345678910");
-//        if (updatePasswordResult.getStatus().equals(Result.success)) {
+//        BusinessResult updatePasswordResult = userService.updatePassword(1, "12345678", "12345678910");
+//        if (updatePasswordResult.getStatus()) {
 //            System.out.println("修改密码成功");
 //        } else {
-//            System.out.println(updatePasswordResult.getMessage());
+//            System.out.println("[修改用户信息失败:原因:" + updatePasswordResult.getErrorMessage() + "]");
 //        }
     }
 
@@ -165,11 +172,12 @@ public class UserServiceTest {
         users.add(new User(6, "新头像地址"));
 
         for (int i = 0; i < users.size(); i++) {
-            Result updateAvatarResult = userService.updateAvatar(users.get(i));
-            if (updateAvatarResult.getStatus().equals(Result.success)) {
+            BusinessResult updateAvatarResult = userService.updateAvatar(users.get(i));
+            if (updateAvatarResult.getStatus()) {
                 System.out.println("[修改头像成功:编号:" + (i + 1) + "]");
             } else {
-                System.out.println("[修改头像失败:编号:" + (i + 1) + ",原因:" + updateAvatarResult.getMessage() + "]");
+                System.out.println("[修改头像失败:编号:" + (i + 1) + ",错误代码:" + updateAvatarResult.getErrorCode() + ",错误原因:" + updateAvatarResult.getErrorMessage() + "]");
+
             }
         }
     }
@@ -187,52 +195,63 @@ public class UserServiceTest {
         users.add("12345678@qq.com");
 
         for (int i = 0; i < users.size(); i++) {
-            Result resetPasswordResult = userService.resetPassword(users.get(i));
-            if (resetPasswordResult.getStatus().equals(Result.success)) {
+            BusinessResult resetPasswordResult = userService.resetPassword(users.get(i));
+            if (resetPasswordResult.getStatus()) {
                 System.out.println("[重置密码成功:编号:" + (i + 1) + "]");
             } else {
-                System.out.println("[重置密码失败:编号:" + (i + 1) + ",原因:" + resetPasswordResult.getMessage() + "]");
+                System.out.println("[重置密码失败:编号:" + (i + 1) + ",错误代码:" + resetPasswordResult.getErrorCode() + ",错误原因:" + resetPasswordResult.getErrorMessage() + "]");
+
             }
         }
     }
 
     @Test
-    public void retrieveActionsTest() {
-        Result retrieveActionsResult = userService.retrieveActions(3);
-        if (retrieveActionsResult.getStatus().equals(Result.success)) {
-            System.out.println("[获取用户动态成功:" + retrieveActionsResult.getData() + "]");
+    public void findFansTest() {
+        BusinessResult result = userService.findFans(3, 1);
+        if (result.getStatus()) {
+            Page<UserCollection> userCollectionPage = (Page<UserCollection>) result.getData();
+
+            List<User> userList = new ArrayList<>();
+            for (UserCollection userCollection : userCollectionPage) {
+                userList.add(userCollection.getFans());
+            }
+
+            System.out.println("总页数:" + userCollectionPage.getTotalPages());
+            System.out.println("总元素:" + userCollectionPage.getTotalElements());
+            System.out.println("当前页:" + (userCollectionPage.getNumber() + 1));
+            System.out.println("当前页元素个数:" + userCollectionPage.getNumberOfElements());
+            System.out.println("当前页元素:" + userCollectionPage.getContent());
+
+            for (User user : userList) {
+                System.out.println(user);
+            }
         } else {
-            System.out.println("[获取用户动态失败:原因:" + retrieveActionsResult.getMessage() + "]");
+            System.out.println("[获取用户粉丝失败:" + "错误代码:" + result.getErrorCode() + ",错误原因:" + result.getErrorMessage() + "]");
         }
     }
 
     @Test
-    public void retrieveActionCollectionTest() {
-        Result retrieveActionCollectionResult = userService.retrieveActionCollection(6);
-        if (retrieveActionCollectionResult.getStatus().equals(Result.success)) {
-            System.out.println("[获取用户收藏动态成功:" + retrieveActionCollectionResult.getData() + "]");
-        } else {
-            System.out.println("[获取用户收藏动态失败:原因:" + retrieveActionCollectionResult.getMessage() + "]");
-        }
-    }
+    public void findFocusTest() {
+        BusinessResult result = userService.findFocus(3, 1);
+        if (result.getStatus()) {
+            Page<UserCollection> userCollectionPage = (Page<UserCollection>) result.getData();
 
-    @Test
-    public void retrieveFansTest() {
-        Result retrieveFansResult = userService.retrieveFans(3);
-        if (retrieveFansResult.getStatus().equals(Result.success)) {
-            System.out.println("[获取用户粉丝成功:" + retrieveFansResult.getData() + "]");
-        } else {
-            System.out.println("[获取用户粉丝失败:原因:" + retrieveFansResult.getMessage() + "]");
-        }
-    }
+            List<User> userList = new ArrayList<>();
+            for (UserCollection userCollection : userCollectionPage) {
+                userList.add(userCollection.getFocus());
+            }
 
-    @Test
-    public void retrieveFocusTest() {
-        Result retrieveFocusResult = userService.retrieveFocus(3);
-        if (retrieveFocusResult.getStatus().equals(Result.success)) {
-            System.out.println("[获取用户关注成功:" + retrieveFocusResult.getData() + "]");
+            System.out.println("总页数:" + userCollectionPage.getTotalPages());
+            System.out.println("总元素:" + userCollectionPage.getTotalElements());
+            System.out.println("当前页:" + (userCollectionPage.getNumber() + 1));
+            System.out.println("当前页元素个数:" + userCollectionPage.getNumberOfElements());
+            System.out.println("当前页元素:" + userCollectionPage.getContent());
+
+            for (User user : userList) {
+                System.out.println(user);
+            }
         } else {
-            System.out.println("[获取用户关注失败:原因:" + retrieveFocusResult.getMessage() + "]");
+            System.out.println("[获取用户关注失败:" + "错误代码:" + result.getErrorCode() + ",错误原因:" + result.getErrorMessage() + "]");
         }
     }
 }

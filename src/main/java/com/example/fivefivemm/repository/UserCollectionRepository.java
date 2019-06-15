@@ -4,11 +4,12 @@ package com.example.fivefivemm.repository;
 import com.example.fivefivemm.entity.relation.UserCollection;
 import com.example.fivefivemm.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.annotation.Resource;
 
 @Resource
-public interface UserCollectionRepository extends JpaRepository<UserCollection, Integer> {
+public interface UserCollectionRepository extends JpaRepository<UserCollection, Integer>, JpaSpecificationExecutor<UserCollection> {
 
     /**
      * 通过关注者和粉丝查找关注信息

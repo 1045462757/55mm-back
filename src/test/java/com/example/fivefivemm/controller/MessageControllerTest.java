@@ -24,12 +24,12 @@ public class MessageControllerTest {
 
     @Test
     public void RetrieveMessageForWatcherTest() {
-        System.out.println(messageController.RetrieveMessageForWatcher(2));
+        System.out.println(messageController.RetrieveMessageForWatcher(3,1));
     }
 
     @Test
     public void RetrieveMessageForActionAuthorTest() {
-        System.out.println(messageController.RetrieveMessageForActionAuthor(1));
+        System.out.println(messageController.RetrieveMessageForActionAuthor(3,1));
     }
 
     @Test

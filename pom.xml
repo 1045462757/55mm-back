@@ -12,7 +12,7 @@
     <artifactId>55mm</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>55mm</name>
-    <description>Demo project for Spring Boot</description>
+    <description>55mm约拍平台java后端</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -63,6 +63,18 @@
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
             <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
         </dependency>
 
     </dependencies>

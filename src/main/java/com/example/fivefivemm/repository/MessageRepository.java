@@ -4,6 +4,7 @@ import com.example.fivefivemm.entity.action.Action;
 import com.example.fivefivemm.entity.message.Message;
 import com.example.fivefivemm.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @since 2019年5月22日18:55:57
  */
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Integer> {
+public interface MessageRepository extends JpaRepository<Message, Integer>, JpaSpecificationExecutor<Message> {
 
     /**
      * 通过动态和约拍者查找消息

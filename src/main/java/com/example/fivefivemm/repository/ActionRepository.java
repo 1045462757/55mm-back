@@ -2,6 +2,7 @@ package com.example.fivefivemm.repository;
 
 import com.example.fivefivemm.entity.action.Action;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @since 2019年5月19日12:55:48
  */
 @Repository
-public interface ActionRepository extends JpaRepository<Action, Integer> {
+public interface ActionRepository extends JpaRepository<Action, Integer>, JpaSpecificationExecutor<Action> {
 
     /**
      * 通过动态Id查找Action

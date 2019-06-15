@@ -42,7 +42,7 @@ public class UserControllerTest {
     @Test
     public void updateInformationTest() {
         User user = new User();
-        user.setUserId(2);
+        user.setUserId(3);
         user.setSex("女");
         user.setType("模特");
         user.setEmail("test@qq.com");
@@ -67,16 +67,16 @@ public class UserControllerTest {
 
     @Test
     public void retrieveOtherInformationTest() {
-        System.out.println(userController.retrieveOtherInformation(1, 2));
+        System.out.println(userController.retrieveOtherInformation(3, 4));
     }
 
     @Test
     public void RetrieveFocusTest() {
-        System.out.println(userController.retrieveFocus(4));
+        System.out.println(userController.retrieveFocus(3,1));
     }
 
     @Test
-    public void RetrieveFansTest() {
-        System.out.println(userController.retrieveFans(4));
+    public void RetrieveFansTest(){
+        System.out.println(userController.retrieveFans(4,1));
     }
 }

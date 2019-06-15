@@ -8,6 +8,7 @@ import com.example.fivefivemm.entity.user.User;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -128,7 +129,7 @@ public class Utility {
         String images[] = getImageAddress(action.getContent());
         if (getImageAddress(action.getContent()).length != 0) {
             for (String img : images) {
-                imageArray.add(Constants.imageAddress + img);
+                imageArray.add(Setting.imageAddress() + img);
             }
             actionMap.put("images", imageArray);
         }
@@ -162,23 +163,79 @@ public class Utility {
     public static Map<String, Object> userBody(User user, Integer type) {
         Map<String, Object> userMap = new HashMap<>();
         //基础信息
-        userMap.put("userId", user.getUserId());
-        userMap.put("name", user.getName());
-        userMap.put("sex", user.getSex());
-        userMap.put("age", user.getAge());
-        userMap.put("introduction", user.getIntroduction());
-        userMap.put("avatar", user.getAvatar());
-        userMap.put("type", user.getType());
+        if (user.getUserId() != null) {
+            userMap.put("userId", user.getUserId());
+        } else {
+            userMap.put("userId", "");
+        }
+
+        if (user.getName() != null) {
+            userMap.put("name", user.getName());
+        } else {
+            userMap.put("name", "");
+        }
+
+        if (user.getSex() != null) {
+            userMap.put("sex", user.getSex());
+        } else {
+            userMap.put("sex", "");
+        }
+
+        if (user.getAge() != null) {
+            userMap.put("age", user.getAge());
+        } else {
+            userMap.put("age", "");
+        }
+
+        if (user.getIntroduction() != null) {
+            userMap.put("introduction", user.getIntroduction());
+        } else {
+            userMap.put("introduction", "");
+        }
+
+        if (user.getAvatar() != null) {
+            userMap.put("avatar", user.getAvatar());
+        } else {
+            userMap.put("avatar", "");
+        }
+
+        if (user.getType() != null) {
+            userMap.put("type", user.getType());
+        } else {
+            userMap.put("type", "");
+        }
+
         if (user.getBirthday() != null) {
             userMap.put("birthday", user.getBirthday().toString().substring(0, 10));
+        } else {
+            userMap.put("birthday", "");
         }
 
         //隐私信息
         if (type == 1) {
-            userMap.put("email", user.getEmail());
-            userMap.put("phone", user.getPhone());
-            userMap.put("qq", user.getQq());
-            userMap.put("weChat", user.getWeChat());
+            if (user.getEmail() != null) {
+                userMap.put("email", user.getEmail());
+            } else {
+                userMap.put("email", "");
+            }
+
+            if (user.getPhone() != null) {
+                userMap.put("phone", user.getPhone());
+            } else {
+                userMap.put("phone", "");
+            }
+
+            if (user.getQq() != null) {
+                userMap.put("qq", user.getQq());
+            } else {
+                userMap.put("qq", "");
+            }
+
+            if (user.getWeChat() != null) {
+                userMap.put("weChat", user.getWeChat());
+            } else {
+                userMap.put("weChat", "");
+            }
         }
 
         return userMap;
@@ -206,14 +263,14 @@ public class Utility {
      * 头像地址构造
      */
     private static String avatarAddress(String fileName) {
-        return Constants.serverAddress + "avatar/" + fileName;
+        return Setting.serverAddress() + "avatar/" + fileName;
     }
 
     /**
      * 动态图片地址构造
      */
     private static String ActionAddress(String fileName) {
-        return Constants.serverAddress + "action/" + fileName;
+        return Setting.serverAddress() + "action/" + fileName;
     }
 
     /**
@@ -268,10 +325,10 @@ public class Utility {
         String fileName = UUID.randomUUID() + image.getOriginalFilename();
         try {
             if (type == 1) {
-                image.transferTo(new File(Constants.avatarPath + fileName));
+                image.transferTo(new File(Setting.AVATAR_PATH + fileName));
                 return avatarAddress(fileName);
             } else if (type == 2) {
-                image.transferTo(new File(Constants.actionPath + fileName));
+                image.transferTo(new File(Setting.ACTION_IMAGE_PATH + fileName));
                 return ActionAddress(fileName);
             } else {
                 return null;
@@ -399,86 +456,79 @@ public class Utility {
     }
 
     /**
-     * 动态收藏按时间排序
+     * 用户收藏分页对象转换
      *
-     * @param list 动态集合
+     * @param userPage
+     * @return
      */
-    public static void ActionCollecitonListSort(List<ActionCollection> list) {
-        Collections.sort(list, new Comparator<ActionCollection>() {
-            @Override
-            public int compare(ActionCollection o1, ActionCollection o2) {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                try {
-                    Date dt1 = format.parse(o1.getCreateTime().toString());
-                    Date dt2 = format.parse(o2.getCreateTime().toString());
-                    if (dt1.getTime() < dt2.getTime()) {
-                        return 1;
-                    } else if (dt1.getTime() > dt2.getTime()) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return 0;
-            }
-        });
+    public static Map<String, Object> PageUserMap(Page<UserCollection> userPage) {
+        if (userPage == null) {
+            return null;
+        }
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("totalPages", userPage.getTotalPages());
+//            map.put("totalElements", actionPage.getTotalElements());
+        userMap.put("currentPage", (userPage.getNumber() + 1));
+        List<User> userList = new ArrayList<>();
+        for (UserCollection userCollection : userPage) {
+            userList.add(userCollection.getFans());
+        }
+        userMap.put("users", Utility.userListBody(userList));
+        return userMap;
     }
 
     /**
-     * 动态按时间排序
+     * 动态分页对象转换
      *
-     * @param list 动态集合
+     * @param actionPage
+     * @return
      */
-    public static void ActionListSort(List<Action> list) {
-        Collections.sort(list, new Comparator<Action>() {
-            @Override
-            public int compare(Action o1, Action o2) {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                try {
-                    Date dt1 = format.parse(o1.getCreateTime().toString());
-                    Date dt2 = format.parse(o2.getCreateTime().toString());
-                    if (dt1.getTime() < dt2.getTime()) {
-                        return 1;
-                    } else if (dt1.getTime() > dt2.getTime()) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return 0;
-            }
-        });
+    public static Map<String, Object> PageActionMap(Page<Action> actionPage) {
+        if (actionPage == null) {
+            return null;
+        }
+        Map<String, Object> actionMap = new HashMap<>();
+        actionMap.put("totalPages", actionPage.getTotalPages());
+        actionMap.put("totalElements", actionPage.getTotalElements());
+        actionMap.put("currentPage", (actionPage.getNumber() + 1));
+        actionMap.put("elementsForCurrentPage", actionPage.getNumberOfElements());
+        actionMap.put("actions", Utility.ActionListBody(actionPage.getContent()));
+        return actionMap;
     }
 
     /**
-     * 用户关注按时间排序
+     * 动态收藏分页对象转换
      *
-     * @param list 动态集合
+     * @param actionCollectionsPage
+     * @return
      */
-    public static void UserCollecitonListSort(List<UserCollection> list) {
-        Collections.sort(list, new Comparator<UserCollection>() {
-            @Override
-            public int compare(UserCollection o1, UserCollection o2) {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                try {
-                    Date dt1 = format.parse(o1.getCreateTime().toString());
-                    Date dt2 = format.parse(o2.getCreateTime().toString());
-                    if (dt1.getTime() < dt2.getTime()) {
-                        return 1;
-                    } else if (dt1.getTime() > dt2.getTime()) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return 0;
-            }
-        });
+    public static Map<String, Object> PageActionCollectionMap(Page<ActionCollection> actionCollectionsPage) {
+        if (actionCollectionsPage == null) {
+            return null;
+        }
+        Map<String, Object> actionMap = new HashMap<>();
+        actionMap.put("totalPages", actionCollectionsPage.getTotalPages());
+        actionMap.put("totalElements", actionCollectionsPage.getTotalElements());
+        actionMap.put("currentPage", (actionCollectionsPage.getNumber() + 1));
+        actionMap.put("elementsForCurrentPage", actionCollectionsPage.getNumberOfElements());
+        List<Action> actionList = new ArrayList<>();
+        for (ActionCollection actionCollection : actionCollectionsPage) {
+            actionList.add(actionCollection.getCollectAction());
+        }
+        actionMap.put("actions", Utility.ActionListBody(actionList));
+        return actionMap;
+    }
+
+    public static Map<String, Object> PageMessageMap(Page<Message> messagePage, Integer type) {
+        if (messagePage == null) {
+            return null;
+        }
+        Map<String, Object> messageMap = new HashMap<>();
+        messageMap.put("totalPages", messagePage.getTotalPages());
+        messageMap.put("totalElements", messagePage.getTotalElements());
+        messageMap.put("currentPage", (messagePage.getNumber() + 1));
+        messageMap.put("elementsForCurrentPage", messagePage.getNumberOfElements());
+        messageMap.put("messages", Utility.MessageListBody(messagePage.getContent(), type));
+        return messageMap;
     }
 }

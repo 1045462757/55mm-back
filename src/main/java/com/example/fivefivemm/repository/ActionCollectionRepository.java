@@ -4,10 +4,11 @@ import com.example.fivefivemm.entity.action.Action;
 import com.example.fivefivemm.entity.relation.ActionCollection;
 import com.example.fivefivemm.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ActionCollectionRepository extends JpaRepository<ActionCollection, Integer> {
+public interface ActionCollectionRepository extends JpaRepository<ActionCollection, Integer>, JpaSpecificationExecutor<ActionCollection> {
 
     /**
      * 通过用户和动态查找收藏关系

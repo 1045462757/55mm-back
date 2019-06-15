@@ -1,15 +1,7 @@
 package com.example.fivefivemm.service;
 
+import com.example.fivefivemm.utility.BusinessResult;
 
-import com.example.fivefivemm.utility.Result;
-
-/**
- * 收藏业务类
- *
- * @author tiga
- * @version 1.0
- * @since 2019年5月27日11:18:49
- */
 public interface CollectionService {
 
     /**
@@ -17,18 +9,20 @@ public interface CollectionService {
      *
      * @param userId   用户Id
      * @param actionId 动态Id
-     * @return message 1.参数无效 2.不存在的用户 3.不存在的动态 4.已存在的收藏关系
+     * @return errorCode:50001 errorMessage:参数无效:用户Id,动态Id为空 errorCode:50002 errorMessage:不存在的用户
+     * errorCode:50003 errorMessage:不存在的动态 errorCode:50004 errorMessage:已存在的收藏关系
      */
-    Result addActionCollection(Integer userId, Integer actionId);
+    BusinessResult addActionCollection(Integer userId, Integer actionId);
 
     /**
      * 取消收藏动态
      *
      * @param userId   用户Id
      * @param actionId 动态Id
-     * @return message 1.参数无效 2.不存在的动态 3.已存在的收藏关系
+     * @return errorCode:50011 errorMessage:参数无效:用户Id,动态Id为空 errorCode:50012 errorMessage:不存在的用户
+     * errorCode:50013 errorMessage:不存在的收藏关系
      */
-    Result removeActionCollection(Integer userId, Integer actionId);
+    BusinessResult removeActionCollection(Integer userId, Integer actionId);
 
     /**
      * 查询动态收藏关系
@@ -44,18 +38,19 @@ public interface CollectionService {
      *
      * @param focusId 关注的用户Id
      * @param fansId  粉丝用户Id
-     * @return message 1.参数无效 2.不存在的用户 3.已存在的关注关系
+     * @return errorCode:50021 errorMessage:参数无效:关注者用户Id,粉丝用户Id为空 errorCode:50022 errorMessage:不存在的用户
+     * errorCode:50023 errorMessage:已存在的关注关系
      */
-    Result addUserCollection(Integer focusId, Integer fansId);
+    BusinessResult addUserCollection(Integer focusId, Integer fansId);
 
     /**
      * 取消关注用户
      *
      * @param focusId 关注的用户Id
      * @param fansId  粉丝用户Id
-     * @return message 1.参数无效 2.不存在的关注关系
+     * @return errorCode:50031 errorMessage:参数无效:关注者用户Id,粉丝用户Id为空 errorCode:50032 errorMessage:不存在的关注关系
      */
-    Result removeUserCollection(Integer focusId, Integer fansId);
+    BusinessResult removeUserCollection(Integer focusId, Integer fansId);
 
     /**
      * 查询用户关注关系

@@ -9,7 +9,7 @@ import com.example.fivefivemm.repository.ActionRepository;
 import com.example.fivefivemm.repository.UserCollectionRepository;
 import com.example.fivefivemm.repository.UserRepository;
 import com.example.fivefivemm.service.CollectionService;
-import com.example.fivefivemm.utility.Result;
+import com.example.fivefivemm.utility.BusinessResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,9 @@ import javax.transaction.Transactional;
  * <p>
  * 优化代码
  * 2019年6月7日11:45:22
+ * <p>
+ * 优化大代码
+ * 2019年6月15日10:00:55
  *
  * @author tiga
  * @version 1.0
@@ -46,24 +49,24 @@ public class CollectionServiceImplements implements CollectionService {
 
     @Override
     @Transactional
-    public Result addActionCollection(Integer userId, Integer actionId) {
+    public BusinessResult addActionCollection(Integer userId, Integer actionId) {
         if (userId == null || actionId == null) {
-            return new Result(Result.failed, "参数无效");
+            return new BusinessResult(false, 50001, "参数无效:用户Id,动态Id为空");
         }
 
         User validUser = userRepository.findByUserId(userId);
         if (validUser == null) {
-            return new Result(Result.failed, "不存在的用户");
+            return new BusinessResult(false, 50002, "不存在的用户");
         }
 
         Action validAction = actionRepository.findByActionId(actionId);
         if (validAction == null) {
-            return new Result(Result.failed, "不存在的动态");
+            return new BusinessResult(false, 50003, "不存在的动态");
         }
 
         ActionCollection actionCollection = actionCollectionRepository.findByCollectorAndCollectAction(validUser, validAction);
         if (actionCollection != null) {
-            return new Result(Result.failed, "已存在的收藏关系");
+            return new BusinessResult(false, 50004, "已存在的收藏关系");
         }
 
         int collect;
@@ -75,24 +78,24 @@ public class CollectionServiceImplements implements CollectionService {
         validAction.setCollect(collect + 1);
         actionCollectionRepository.save(new ActionCollection(validUser, validAction));
         logger.info("保存收藏:[收藏用户Id:" + validUser.getUserId() + ", 收藏动态Id:" + validAction.getActionId() + "]");
-        return new Result(Result.success);
+        return new BusinessResult(true);
     }
 
     @Override
     @Transactional
-    public Result removeActionCollection(Integer userId, Integer actionId) {
+    public BusinessResult removeActionCollection(Integer userId, Integer actionId) {
         if (userId == null || actionId == null) {
-            return new Result(Result.failed, "参数无效");
+            return new BusinessResult(false, 50011, "参数无效:用户Id,动态Id为空");
         }
 
         Action validAction = actionRepository.findByActionId(actionId);
         if (validAction == null) {
-            return new Result(Result.failed, "不存在的动态");
+            return new BusinessResult(false, 50012, "不存在的动态");
         }
 
         ActionCollection actionCollection = actionCollectionRepository.findByCollectorAndCollectAction(new User(userId), validAction);
         if (actionCollection == null) {
-            return new Result(Result.failed, "不存在的收藏关系");
+            return new BusinessResult(false, 50013, "不存在的收藏关系");
         }
 
         int collect;
@@ -104,7 +107,7 @@ public class CollectionServiceImplements implements CollectionService {
         validAction.setCollect(collect - 1);
         actionCollectionRepository.deleteById(actionCollection.getActionCollectionId());
         logger.info("删除收藏:[收藏关系Id:" + actionCollection.getActionCollectionId() + "]");
-        return new Result(Result.success);
+        return new BusinessResult(true);
     }
 
     @Override
@@ -118,41 +121,41 @@ public class CollectionServiceImplements implements CollectionService {
 
     @Override
     @Transactional
-    public Result addUserCollection(Integer focusId, Integer fansId) {
+    public BusinessResult addUserCollection(Integer focusId, Integer fansId) {
         if (focusId == null || fansId == null) {
-            return new Result(Result.failed, "参数无效");
+            return new BusinessResult(false, 50021, "参数无效:关注者用户Id,粉丝用户Id为空");
         }
 
-        User focus = userRepository.findByUserId(fansId);
+        User focus = userRepository.findByUserId(focusId);
         User fans = userRepository.findByUserId(fansId);
         if (focus == null || fans == null) {
-            return new Result(Result.failed, "不存在的用户");
+            return new BusinessResult(false, 50022, "不存在的用户");
         }
 
         UserCollection userCollection = userCollectionRepository.findByFocusAndFans(focus, fans);
         if (userCollection != null) {
-            return new Result(Result.failed, "已存在的关注关系");
+            return new BusinessResult(false, 50023, "已存在的关注关系");
         }
 
         userCollectionRepository.save(new UserCollection(focus, fans));
         logger.info("保存关注:[关注用户Id:" + focus.getUserId() + ", 粉丝Id:" + fans.getUserId() + "]");
-        return new Result(Result.success, null);
+        return new BusinessResult(true);
     }
 
     @Override
     @Transactional
-    public Result removeUserCollection(Integer focusId, Integer fansId) {
+    public BusinessResult removeUserCollection(Integer focusId, Integer fansId) {
         if (focusId == null || fansId == null) {
-            return new Result(Result.failed, "参数无效");
+            return new BusinessResult(false, 50031, "参数无效:关注者用户Id,粉丝用户Id为空");
         }
 
         UserCollection userCollection = userCollectionRepository.findByFocusAndFans(new User(focusId), new User(fansId));
         if (userCollection == null) {
-            return new Result(Result.failed, "不存在的关注关系");
+            return new BusinessResult(false, 50032, "不存在的关注关系");
         }
         userCollectionRepository.deleteById(userCollection.getUserCollectionId());
         logger.info("删除关注:[关注关系Id:" + userCollection.getUserCollectionId() + "]");
-        return new Result(Result.success);
+        return new BusinessResult(true);
     }
 
     @Override

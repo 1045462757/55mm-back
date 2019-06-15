@@ -1,6 +1,6 @@
 package com.example.fivefivemm.service;
 
-import com.example.fivefivemm.utility.Result;
+import com.example.fivefivemm.utility.BusinessResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,51 +24,51 @@ public class CollectionServiceTest {
 
     @Test
     public void addActionCollectionTest() {
-        Result addActionCollectionResult = collectionService.addActionCollection(2, 1);
-        if (addActionCollectionResult.getStatus().equals(Result.success)) {
-            System.out.println("收藏成功");
+        BusinessResult addActionCollectionResult = collectionService.addActionCollection(3, 19);
+        if (addActionCollectionResult.getStatus()) {
+            System.out.println("收藏动态成功");
         } else {
-            System.out.println(addActionCollectionResult.getMessage());
+            System.out.println("[收藏动态失败:错误代码:" + addActionCollectionResult.getErrorCode() + ",错误原因:" + addActionCollectionResult.getErrorMessage() + "]");
         }
     }
 
     @Test
     public void removeActionCollectionTest() {
-        Result addActionCollectionResult = collectionService.removeActionCollection(1, 1);
-        if (addActionCollectionResult.getStatus().equals(Result.success)) {
-            System.out.println("取消收藏成功");
+        BusinessResult removeActionCollectionResult = collectionService.removeActionCollection(3, 19);
+        if (removeActionCollectionResult.getStatus()) {
+            System.out.println("取消收藏动态成功");
         } else {
-            System.out.println(addActionCollectionResult.getMessage());
+            System.out.println("[取消收藏动态失败:错误代码:" + removeActionCollectionResult.getErrorCode() + ",错误原因:" + removeActionCollectionResult.getErrorMessage() + "]");
         }
     }
 
     @Test
     public void findActionCollectionTest() {
-        System.out.println(collectionService.findActionCollection(2, 1));
+        System.out.println(collectionService.findActionCollection(3, 10));
     }
 
     @Test
     public void addUserCollectionTest() {
-        Result addActionCollectionResult = collectionService.addUserCollection(2, 1);
-        if (addActionCollectionResult.getStatus().equals(Result.success)) {
-            System.out.println("关注成功");
+        BusinessResult addUserCollectionResult = collectionService.addUserCollection(3, 4);
+        if (addUserCollectionResult.getStatus()) {
+            System.out.println("关注用户成功");
         } else {
-            System.out.println(addActionCollectionResult.getMessage());
+            System.out.println("[关注用户失败:错误代码:" + addUserCollectionResult.getErrorCode() + ",错误原因:" + addUserCollectionResult.getErrorMessage() + "]");
         }
     }
 
     @Test
     public void removeUserCollectionTest() {
-        Result addActionCollectionResult = collectionService.removeUserCollection(2, 1);
-        if (addActionCollectionResult.getStatus().equals(Result.success)) {
-            System.out.println("取消关注成功");
+        BusinessResult removeUserCollectionResult = collectionService.removeUserCollection(3, 4);
+        if (removeUserCollectionResult.getStatus()) {
+            System.out.println("取消关注用户成功");
         } else {
-            System.out.println(addActionCollectionResult.getMessage());
+            System.out.println("[取消关注用户失败:错误代码:" + removeUserCollectionResult.getErrorCode() + ",错误原因:" + removeUserCollectionResult.getErrorMessage() + "]");
         }
     }
 
     @Test
     public void findUserCollectionTest() {
-        System.out.println(collectionService.findUserCollection(2, 1));
+        System.out.println(collectionService.findUserCollection(4, 4));
     }
 }

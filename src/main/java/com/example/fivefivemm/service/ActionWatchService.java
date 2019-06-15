@@ -1,7 +1,7 @@
 package com.example.fivefivemm.service;
 
 import com.example.fivefivemm.entity.relation.ActionWatch;
-import com.example.fivefivemm.utility.Result;
+import com.example.fivefivemm.utility.BusinessResult;
 
 public interface ActionWatchService {
 
@@ -9,9 +9,10 @@ public interface ActionWatchService {
      * 生成约拍记录
      *
      * @param actionWatch 约拍记录对象,需包含动态Id，约拍者用户Id
-     * @return message 1.参数无效 2.不存在的动态 3.不存在的用户 4.约拍记录已存在
+     * @return errorCode:30001 errorMessage:参数无效:动态Id,约拍者用户Id为空
+     * errorCode:30002 errorMessage:不存在的动态 errorCode:30003 errorMessage:不存在的用户 errorCode:30004 errorMessage:约拍记录已存在
      */
-    Result CreateActionWatch(ActionWatch actionWatch);
+    BusinessResult CreateActionWatch(ActionWatch actionWatch);
 
     /**
      * 查找约拍记录
@@ -25,7 +26,7 @@ public interface ActionWatchService {
      * 删除约拍记录
      *
      * @param actionWatch 约拍记录对象,需包含动态Id，约拍者用户Id
-     * @return message 1.参数无效 2.该约拍记录不存在
+     * @return errorCode:30011 errorMessage:参数无效:动态Id,约拍者用户Id为空  errorCode:30012 errorMessage:该约拍记录不存在
      */
-    Result DeleteActionWatch(ActionWatch actionWatch);
+    BusinessResult DeleteActionWatch(ActionWatch actionWatch);
 }
