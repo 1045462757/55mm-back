@@ -28,7 +28,7 @@ public class ActionControllerTest {
     public void CreateActionTest() {
         User user = new User();
         user.setUserId(1);
-        System.out.println(actionController.CreateAction(new Action(user, "测试约拍信息", "重庆", 150, "快来拍呀")));
+//        System.out.println(actionController.CreateAction(new Action(user, "测试约拍信息", "重庆", 150, "快来拍呀")));
     }
 
     @Test

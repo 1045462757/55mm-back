@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -136,7 +137,11 @@ public class UserController {
     public ResponseEntity updateAvatar(@RequestParam MultipartFile avatar, @RequestParam Integer userId) {
         BusinessResult updateAvatarResult = userService.updateAvatar(new User(userId, Utility.saveImage(avatar, 1)));
         if (updateAvatarResult.getStatus()) {
-            return ResponseEntity.ok(updateAvatarResult.getData());
+            //匹配前端要求
+            Map<String,Object> map = new HashMap<>();
+            map.put("status",200);
+            map.put("data",updateAvatarResult.getData());
+            return ResponseEntity.ok(map);
         }
 
         return ResponseEntity.ok(new ResponseBody(updateAvatarResult.getErrorCode(), updateAvatarResult.getErrorMessage()));

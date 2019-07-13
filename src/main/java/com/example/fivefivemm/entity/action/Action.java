@@ -2,6 +2,7 @@ package com.example.fivefivemm.entity.action;
 
 import com.example.fivefivemm.entity.message.Message;
 import com.example.fivefivemm.entity.relation.ActionCollection;
+import com.example.fivefivemm.entity.relation.ActionTag;
 import com.example.fivefivemm.entity.relation.ActionWatch;
 import com.example.fivefivemm.entity.user.User;
 
@@ -53,6 +54,9 @@ public class Action {
 
     @OneToMany(fetch = FetchType.LAZY, targetEntity = ActionCollection.class, mappedBy = "collectAction", cascade = CascadeType.REMOVE)
     private Set<ActionCollection> actionCollections;
+
+    @OneToMany(fetch = FetchType.LAZY, targetEntity = ActionTag.class, mappedBy = "action", cascade = CascadeType.REMOVE)
+    private Set<ActionTag> actionTags;
 
     public Action() {
 
@@ -164,6 +168,14 @@ public class Action {
 
     public void setActionCollections(Set<ActionCollection> actionCollections) {
         this.actionCollections = actionCollections;
+    }
+
+    public Set<ActionTag> getActionTags() {
+        return actionTags;
+    }
+
+    public void setActionTags(Set<ActionTag> actionTags) {
+        this.actionTags = actionTags;
     }
 
     @Override

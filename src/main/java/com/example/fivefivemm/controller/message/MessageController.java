@@ -66,14 +66,6 @@ public class MessageController {
     public ResponseEntity RetrieveMessageForActionAuthor(@RequestParam Integer actionAuthorId, @RequestParam Integer pageIndex) {
         BusinessResult retrieveForActionAuthorResult = messageService.RetrieveForActionAuthorId(actionAuthorId, pageIndex);
         if (retrieveForActionAuthorResult.getStatus()) {
-//            List<Message> messageList = (List<Message>) retrieveForActionAuthorResult.getData();
-//            int notReadNum = Utility.getNotReadMessage(messageList);
-//            JSONArray jsonArray = Utility.MessageListBody(messageList, 1);
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("notReadNum", notReadNum);
-//            map.put("messageList", jsonArray);
-//            return ResponseEntity.ok(map);
-
             Page<Message> messagePage = (Page<Message>) retrieveForActionAuthorResult.getData();
             int notReadNum = Utility.getNotReadMessage(messagePage.getContent());
             Map<String, Object> map = new HashMap<>();

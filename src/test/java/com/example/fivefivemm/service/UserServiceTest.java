@@ -254,4 +254,9 @@ public class UserServiceTest {
             System.out.println("[获取用户关注失败:" + "错误代码:" + result.getErrorCode() + ",错误原因:" + result.getErrorMessage() + "]");
         }
     }
+
+    @Test
+    public void findAllUsersTest() {
+        System.out.println(userService.findAllUsers());
+    }
 }

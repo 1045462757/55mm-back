@@ -3,8 +3,10 @@ package com.example.fivefivemm.controller.action;
 import com.example.fivefivemm.entity.action.Action;
 import com.example.fivefivemm.entity.relation.ActionCollection;
 import com.example.fivefivemm.entity.relation.ActionWatch;
+import com.example.fivefivemm.entity.tag.Tag;
 import com.example.fivefivemm.entity.user.User;
 import com.example.fivefivemm.service.ActionService;
+import com.example.fivefivemm.service.ActionTagService;
 import com.example.fivefivemm.service.ActionWatchService;
 import com.example.fivefivemm.service.CollectionService;
 import com.example.fivefivemm.utility.BusinessResult;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,21 +60,38 @@ public class ActionController {
     @Resource
     private CollectionService collectionService;
 
+    @Resource
+    private ActionTagService actionTagService;
+
     /**
      * 发表动态
      *
-     * @param action 动态对象
+     * @param map 动态对象
      * @return data:保存的动态 errorCode:20001 errorMessage:参数无效:作者用户Id,标题,地区,价格,内容为空
      */
     @PostMapping("/action")
     @ApiOperation(value = "发表动态", notes = "需提供作者Id,标题，地区，价格，内容")
-    public ResponseEntity CreateAction(@RequestBody Action action) {
-        BusinessResult createActionResult = actionService.CreateAction(action);
-        if (createActionResult.getStatus()) {
-            return ResponseEntity.ok(Utility.ActionBody((Action) createActionResult.getData()));
+    @SuppressWarnings("unchecked")
+    @Transactional
+    public ResponseEntity CreateAction(@RequestBody Map<String, Object> map) {
+        BusinessResult createActionResult = actionService.CreateAction(new Action(new User((Integer) map.get("authorId")), map.get("title").toString(),
+                map.get("address").toString(), (Integer) map.get("cost"), map.get("content").toString()));
+        if (!createActionResult.getStatus()) {
+            return ResponseEntity.ok(new ResponseBody(createActionResult.getErrorCode(), createActionResult.getErrorMessage()));
         }
 
-        return ResponseEntity.ok(new ResponseBody(createActionResult.getErrorCode(), createActionResult.getErrorMessage()));
+        //保存动态成功后获取动态Id和标签Id集合
+        Action action = (Action) createActionResult.getData();
+
+        List<Integer> tagsId = (List<Integer>) map.get("tags");
+
+        //绑定动态和标签
+        BusinessResult createActionTagResult = actionTagService.CreateActionTag(action.getActionId(), tagsId);
+        if (createActionTagResult.getStatus()) {
+            return ResponseEntity.ok(null);
+        } else {
+            return ResponseEntity.ok(new ResponseBody(createActionTagResult.getErrorCode(), createActionTagResult.getErrorMessage()));
+        }
     }
 
     /**
@@ -82,10 +103,17 @@ public class ActionController {
      */
     @GetMapping("/action")
     @ApiOperation(value = "查询动态", notes = "需提供动态Id")
+    @SuppressWarnings("unchecked")
     public ResponseEntity RetrieveAction(@RequestParam Integer actionId, @RequestParam(required = false) Integer userId) {
         BusinessResult retrieveActionResult = actionService.RetrieveAction(actionId);
         if (retrieveActionResult.getStatus()) {
             Map<String, Object> actionMap = Utility.ActionBody((Action) retrieveActionResult.getData());
+            //查询动态的标签
+            BusinessResult findTagsResult = actionTagService.findTags(actionId);
+            if (findTagsResult.getStatus()) {
+                List<Tag> tags = (List<Tag>) findTagsResult.getData();
+                actionMap.put("tags", tags);
+            }
             if (userId != null) {
                 actionMap.put("isWatched", actionWatchService.RetrieveActionWatch(new ActionWatch(new User(userId), new Action(actionId))));
                 actionMap.put("isCollected", collectionService.findActionCollection(userId, actionId));

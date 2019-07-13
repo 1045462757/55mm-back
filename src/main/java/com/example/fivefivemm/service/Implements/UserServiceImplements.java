@@ -21,6 +21,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户业务类
@@ -227,5 +228,10 @@ public class UserServiceImplements implements UserService {
                 PageRequest.of(pageIndex - 1, 10, new Sort(Sort.Direction.DESC, "createTime")));
         logger.info("获取用户关注:[用户Id:" + fansId + "]");
         return new BusinessResult(true, userCollectionPage);
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll(new Sort(Sort.Direction.DESC, "registerTime"));
     }
 }

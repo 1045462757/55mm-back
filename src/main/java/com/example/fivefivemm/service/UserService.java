@@ -3,6 +3,8 @@ package com.example.fivefivemm.service;
 import com.example.fivefivemm.entity.user.User;
 import com.example.fivefivemm.utility.BusinessResult;
 
+import java.util.List;
+
 public interface UserService {
 
     /**
@@ -82,4 +84,11 @@ public interface UserService {
      * @return data:Page<UserCollection>对象 errorCode:10081 errorMessage 参数无效:粉丝用户Id或页数为空 errorCode:10082 errorMessage:不存在的用户
      */
     BusinessResult findFocus(Integer fansId, Integer pageIndex);
+
+    /**
+     * 获取所有用户
+     *
+     * @return userList
+     */
+    List<User> findAllUsers();
 }

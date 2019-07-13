@@ -134,7 +134,7 @@ public class ActionServiceImplements implements ActionService {
                     List<Predicate> predicates = new ArrayList<>();
 
                     //按地址查询
-                    if (address != null) {
+                    if (address != null && address.length() != 0) {
                         predicates.add(criteriaBuilder.equal(root.get("address").as(String.class), address));
                     }
 
@@ -144,14 +144,14 @@ public class ActionServiceImplements implements ActionService {
                     }
 
                     //作者身份查询
-                    if (authorType != null) {
-                        root.join("author", JoinType.INNER);
+                    if (authorType != null && authorType.length() != 0) {
+//                        root.join("author", JoinType.INNER);
                         predicates.add(criteriaBuilder.equal(root.get("author").get("type").as(String.class), authorType));
                     }
 
                     //作者性别查询
-                    if (authorSex != null) {
-                        root.join("author", JoinType.INNER);
+                    if (authorSex != null && authorSex.length() != 0) {
+//                        root.join("author", JoinType.INNER);
                         predicates.add(criteriaBuilder.equal(root.get("author").get("sex").as(String.class), authorSex));
                     }
                     //两种方法都可以

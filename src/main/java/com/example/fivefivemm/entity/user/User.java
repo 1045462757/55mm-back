@@ -258,6 +258,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "[用户信息:用户Id:" + userId + ",账号:" + account + ",姓名:" + name + "]";
+        return "[用户信息:用户Id:" + userId + ",账号:" + account + ",注册时间:" + registerTime + ",最后登录时间:" + lastLoginTime + ",姓名:" + name
+                + ",性别:" + sex + ",类型:" + type + ",邮箱:" + email + ",手机号码:" + phone + ",qq:" + qq + ",微信:" + weChat + "]";
     }
 }

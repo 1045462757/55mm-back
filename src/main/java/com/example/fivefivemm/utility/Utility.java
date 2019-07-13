@@ -115,16 +115,42 @@ public class Utility {
         Map<String, Object> actionMap = new HashMap<>();
         Map<String, Object> authorMap = new HashMap<>();
         JSONArray imageArray = new JSONArray();
-        actionMap.put("actionId", action.getActionId());
-        actionMap.put("title", action.getTitle());
-        actionMap.put("cost", action.getCost());
-        actionMap.put("content", action.getContent());
-        actionMap.put("address", action.getAddress());
+        if (action.getActionId() != null) {
+            actionMap.put("actionId", action.getActionId());
+        } else {
+            actionMap.put("actionId", "");
+        }
+
+        if (action.getTitle() != null) {
+            actionMap.put("title", action.getTitle());
+        } else {
+            actionMap.put("title", "");
+        }
+
+        if (action.getCost() != null) {
+            actionMap.put("cost", action.getCost());
+        } else {
+            actionMap.put("cost", "");
+        }
+
+        if (action.getContent() != null) {
+            actionMap.put("content", action.getContent());
+        } else {
+            actionMap.put("content", "");
+        }
+
+        if (action.getAddress() != null) {
+            actionMap.put("address", action.getAddress());
+        } else {
+            actionMap.put("address", "");
+        }
+
         if (action.getCreateTime() != null) {
             actionMap.put("time", action.getCreateTime().toString());
         } else {
             actionMap.put("time", getNowDate());
         }
+
         //获取内容中的图片
         String images[] = getImageAddress(action.getContent());
         if (getImageAddress(action.getContent()).length != 0) {
@@ -133,11 +159,36 @@ public class Utility {
             }
             actionMap.put("images", imageArray);
         }
-        authorMap.put("name", action.getAuthor().getName());
-        authorMap.put("userId", action.getAuthor().getUserId());
-        authorMap.put("avatar", action.getAuthor().getAvatar());
-        authorMap.put("type", action.getAuthor().getType());
-        authorMap.put("sex", action.getAuthor().getSex());
+
+        if (action.getAuthor().getName() != null) {
+            authorMap.put("name", action.getAuthor().getName());
+        } else {
+            authorMap.put("name", "");
+        }
+
+        if (action.getAuthor().getUserId() != null) {
+            authorMap.put("userId", action.getAuthor().getUserId());
+        } else {
+            authorMap.put("userId", "");
+        }
+
+        if (action.getAuthor().getAvatar() != null) {
+            authorMap.put("avatar", action.getAuthor().getAvatar());
+        } else {
+            authorMap.put("avatar", "");
+        }
+
+        if (action.getAuthor().getType() != null) {
+            authorMap.put("type", action.getAuthor().getType());
+        } else {
+            authorMap.put("type", "");
+        }
+
+        if (action.getAuthor().getSex() != null) {
+            authorMap.put("sex", action.getAuthor().getSex());
+        } else {
+            authorMap.put("sex", "");
+        }
         actionMap.put("author", authorMap);
         return actionMap;
     }
@@ -257,6 +308,99 @@ public class Utility {
         } else {
             return new JSONArray();
         }
+    }
+
+    /**
+     * 后台用户信息管理
+     */
+    public static JSONArray adminUserListBody(List<User> userList) {
+        if (userList != null && userList.size() > 0) {
+            JSONArray actionArray = new JSONArray();
+            for (User user : userList) {
+                actionArray.add(adminUserBody(user));
+            }
+            return actionArray;
+        } else {
+            return new JSONArray();
+        }
+    }
+
+    public static Map<String, Object> adminUserBody(User user) {
+        Map<String, Object> userMap = new HashMap<>();
+        //基础信息
+        if (user.getUserId() != null) {
+            userMap.put("userId", user.getUserId());
+        } else {
+            userMap.put("userId", "");
+        }
+
+        if (user.getAccount() != null) {
+            userMap.put("account", user.getAccount());
+        } else {
+            userMap.put("account", "");
+        }
+
+        if (user.getRegisterTime() != null) {
+            userMap.put("registerTime", user.getRegisterTime().toString());
+        } else {
+            userMap.put("registerTime", "");
+        }
+
+        if (user.getLastLoginTime() != null) {
+            userMap.put("lastLoginTime", user.getLastLoginTime().toString());
+        } else {
+            userMap.put("lastLoginTime", "");
+        }
+
+        if (user.getName() != null) {
+            userMap.put("name", user.getName());
+        } else {
+            userMap.put("name", "");
+        }
+
+        if (user.getSex() != null) {
+            userMap.put("sex", user.getSex());
+        } else {
+            userMap.put("sex", "");
+        }
+
+        if (user.getType() != null) {
+            userMap.put("type", user.getType());
+        } else {
+            userMap.put("type", "");
+        }
+
+        if (user.getBirthday() != null) {
+            userMap.put("birthday", user.getBirthday().toString().substring(0, 10));
+        } else {
+            userMap.put("birthday", "");
+        }
+
+        if (user.getEmail() != null) {
+            userMap.put("email", user.getEmail());
+        } else {
+            userMap.put("email", "");
+        }
+
+        if (user.getPhone() != null) {
+            userMap.put("phone", user.getPhone());
+        } else {
+            userMap.put("phone", "");
+        }
+
+        if (user.getQq() != null) {
+            userMap.put("qq", user.getQq());
+        } else {
+            userMap.put("qq", "");
+        }
+
+        if (user.getWeChat() != null) {
+            userMap.put("weChat", user.getWeChat());
+        } else {
+            userMap.put("weChat", "");
+        }
+
+        return userMap;
     }
 
     /**

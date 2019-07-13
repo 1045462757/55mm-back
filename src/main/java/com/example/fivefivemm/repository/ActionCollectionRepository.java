@@ -7,6 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 动态收藏仓库
+ *
+ * @author tiga
+ * @version 1.0
+ * @since 2019年7月12日11:22:20
+ */
 @Repository
 public interface ActionCollectionRepository extends JpaRepository<ActionCollection, Integer>, JpaSpecificationExecutor<ActionCollection> {
 

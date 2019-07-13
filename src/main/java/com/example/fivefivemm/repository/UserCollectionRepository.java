@@ -5,10 +5,16 @@ import com.example.fivefivemm.entity.relation.UserCollection;
 import com.example.fivefivemm.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
-
-@Resource
+/**
+ * 用户关系仓库
+ *
+ * @author tiga
+ * @version 1.0
+ * @since 2019年7月12日11:18:37
+ */
+@Repository
 public interface UserCollectionRepository extends JpaRepository<UserCollection, Integer>, JpaSpecificationExecutor<UserCollection> {
 
     /**

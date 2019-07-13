@@ -57,12 +57,12 @@ public class SendSmsServiceImplements implements SendSmsService {
 
     private Logger logger = LogManager.getLogger(this.getClass());
 
-    @Override
-    @Async
-    public SendSmsResponse SendSmsForMessage(String phone) {
-        //ToDo
-        return null;
-    }
+//    @Override
+//    @Async
+//    public SendSmsResponse SendSmsForMessage(String phone) {
+//        //ToDo
+//        return null;
+//    }
 
     @Override
     @Async
